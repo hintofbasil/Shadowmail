@@ -1,0 +1,2 @@
+DEVELOPMENT = True
+DEBUG = True
