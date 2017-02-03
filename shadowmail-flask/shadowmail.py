@@ -18,5 +18,7 @@ def hello():
 def initdb():
     db.create_all()
 
+import models
+
 if __name__=='__main__':
     app.run()
