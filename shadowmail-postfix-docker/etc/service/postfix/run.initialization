@@ -1,0 +1,3 @@
+echo "user = $MYSQL_USERNAME" >> /etc/postfix/mysql-aliases.cf
+echo "password = $MYSQL_PASSWORD" >> /etc/postfix/mysql-aliases.cf
+echo "hosts = $MYSQL_HOSTS" >> /etc/postfix/mysql-aliases.cf
