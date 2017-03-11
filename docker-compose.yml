@@ -18,9 +18,9 @@ services:
       DB_HOSTS: db:3306
 
       # Inherited from tozd/postfix
-      MAILNAME: postfix
+      MAILNAME: ${MAILNAME}
       MY_NETWORKS: 172.18.0.0/16 127.0.0.0/8
-      MY_DESTINATION: $$myhostname, postfix, localhost.localdomain, localhost
+      MY_DESTINATION: $$myhostname, ${MAILNAME}, localhost.localdomain, localhost
       ROOT_ALIAS: ""
     ports:
       - "25:25"
