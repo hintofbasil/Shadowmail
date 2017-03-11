@@ -1,4 +1,4 @@
-from shadowmail import db
+from main import db
 
 class VirtualAlias(db.Model):
     id = db.Column(db.Integer, primary_key=True)

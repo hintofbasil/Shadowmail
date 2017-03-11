@@ -1,0 +1,14 @@
+version: '2'
+services:
+  db:
+    image: mysql
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+  postfix:
+    build: shadowmail-postfix-docker
+  flask:
+    build: flask
+    ports:
+      - "80:80"
+    environment:
+      APP_SETTINGS: 'development'
