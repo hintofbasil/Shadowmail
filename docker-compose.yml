@@ -4,11 +4,19 @@ services:
     image: mysql
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+    volumes:
+      - /var/lib/mysql:/var/lib/mysql
+
   postfix:
     build: postfix
+    depends_on:
+      - db
+
   flask:
     build: flask
     ports:
       - "80:80"
     environment:
       APP_SETTINGS: 'development'
+    depends_on:
+      - db
