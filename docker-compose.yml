@@ -1,22 +1,28 @@
 version: '2'
 services:
   db:
-    image: mysql
+    build: ./mysql
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_DATABASE: 'shadowmail'
+      FLASK_DB_PASSWORD: ${FLASK_DB_PASSWORD}
+      POSTFIX_DB_PASSWORD: ${POSTFIX_DB_PASSWORD}
     volumes:
       - /var/lib/mysql:/var/lib/mysql
 
   postfix:
-    build: postfix
+    build: ./postfix
+    environment:
+      DB_PASSWORD: ${POSTFIX_DB_PASSWORD}
     depends_on:
       - db
 
   flask:
-    build: flask
+    build: ./flask
     ports:
       - "80:80"
     environment:
       APP_SETTINGS: 'development'
+      DB_PASSWORD: ${FLASK_DB_PASSWORD}
     depends_on:
       - db
