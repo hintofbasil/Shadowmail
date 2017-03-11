@@ -1,4 +1,4 @@
-CREATE TABLE virtual_aliases (
+CREATE TABLE virtual_alias (
   id int(11) NOT NULL AUTO_INCREMENT,
   alias_email varchar(100) NOT NULL,
   real_email varchar(100) NOT NULL,

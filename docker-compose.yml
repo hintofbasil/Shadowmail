@@ -22,7 +22,8 @@ services:
     ports:
       - "80:80"
     environment:
-      APP_SETTINGS: 'development'
+      APP_SETTINGS: 'Docker'
       DB_PASSWORD: ${FLASK_DB_PASSWORD}
+      SECRET_KEY: ${FLASK_SECRET_KEY}
     depends_on:
       - db

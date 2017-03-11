@@ -3,12 +3,12 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-configPath = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config')
 
-app.config.from_pyfile(os.path.join(configPath, 'core.cfg'))
-app.config.from_pyfile(os.path.join(configPath, os.environ['APP_SETTINGS'] + '.cfg'))
+app.config.from_object('config.' + os.environ['APP_SETTINGS'])
 
 db = SQLAlchemy(app)
+
+from models.virtual_alias import *
 
 @app.route('/')
 def hello():
