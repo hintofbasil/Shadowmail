@@ -5,7 +5,7 @@ services:
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
   postfix:
-    build: shadowmail-postfix-docker
+    build: postfix
   flask:
     build: flask
     ports:
