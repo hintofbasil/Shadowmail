@@ -32,8 +32,6 @@ smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 virtual_alias_maps = mysql:/etc/postfix/mysql-aliases.cf
 message_size_limit = 104857600
 virtual_mailbox_domains = hash:/etc/postfix/virtual_mailbox_domains
-smtpd_sender_login_maps = $virtual_mailbox_maps
-
 
 # appending .domain is the MUA's job.
 append_dot_mydomain = no

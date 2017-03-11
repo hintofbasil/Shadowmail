@@ -13,7 +13,15 @@ services:
   postfix:
     build: ./postfix
     environment:
+      DB_USERNAME: postfix
       DB_PASSWORD: ${POSTFIX_DB_PASSWORD}
+      DB_HOSTS: db:3306
+
+      # Inherited from tozd/postfix
+      MAILNAME: postfix
+      MY_NETWORKS: 172.18.0.0/16 127.0.0.0/8
+      MY_DESTINATION: $$myhostname, postfix, localhost.localdomain, localhost
+      ROOT_ALIAS: ""
     depends_on:
       - db
 

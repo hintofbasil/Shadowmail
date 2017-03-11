@@ -1,7 +1,5 @@
 dbname = shadowmail
 
-hosts = 127.0.0.1:3306
-
-query = SELECT real_email FROM virtual_aliases WHERE alias_email='%s' AND enabled='1'
+query = SELECT real_email FROM virtual_alias WHERE alias_email='%s' AND enabled='1'
 
 option_group = client
