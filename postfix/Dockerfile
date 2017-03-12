@@ -6,6 +6,7 @@ EXPOSE 25/tcp 465/tcp 587/tcp
 
 VOLUME /var/log/postfix
 VOLUME /var/spool/postfix
+VOLUME /ssl
 
 ENV MAILNAME mail.example.com
 ENV MY_NETWORKS 172.17.0.0/16 127.0.0.0/8
