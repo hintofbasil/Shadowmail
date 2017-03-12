@@ -32,6 +32,7 @@ services:
     volumes:
       - /var/log/postfix:/var/log/postfix
       - /var/spool/postfix:/var/spool/postfix
+      - ${SSL_LOCATION}:/ssl
 
   flask:
     build: ./flask
