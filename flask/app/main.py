@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -18,7 +20,11 @@ def hello():
 def initdb():
     db.create_all()
 
-import models
+@app.cli.command()
+def test():
+    import pytest
+    rv = pytest.main(['/home/will/Workspace/shadowmail/flask/app', '--ignore=env', '--verbose'])
+    exit(rv)
 
 if __name__=='__main__':
     app.run()
