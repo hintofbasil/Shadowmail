@@ -20,11 +20,11 @@ gulp.task('clean', function() {
 gulp.task('homepage-js', function() {
   var b = browserify({
     entries: './js/homepage.js',
-    debug: false
+    debug: true
   });
 
   return b.bundle()
-    .pipe(source('hompage.js'))
+    .pipe(source('homepage.js'))
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true}))
       .pipe(uglify())
