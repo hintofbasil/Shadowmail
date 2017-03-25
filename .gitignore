@@ -92,3 +92,4 @@ ENV/
 .ropeproject
 shadowmail-postfix-docker/env.list
 flask/app/node_modules/
+flask/app/static/

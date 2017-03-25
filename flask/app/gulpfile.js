@@ -9,38 +9,52 @@ var sourcemaps = require('gulp-sourcemaps');
 var gutil = require('gulp-util');
 var del = require('del');
 var reactify = require('reactify');
+var fs = require('fs');
 
 var paths = {
-  javascript: 'js/**/*'
+  js: 'js/**/*',
+  app_js: 'js/app.jsx',
 }
 
 gulp.task('clean', function() {
   return del(['./static']);
 });
 
-gulp.task('homepage-js', function() {
-  var b = browserify({
-    entries: './js/homepage.js',
+gulp.task('javascript-dev', function() {
+  return browserify({
+    entries: paths.app_js,
     debug: true
-  });
-
-  return b.transform(reactify)
-    .bundle()
-    .pipe(source('homepage.js'))
-    .pipe(buffer())
-    .pipe(sourcemaps.init({loadMaps: true}))
-      .pipe(uglify())
-      .on('error', gutil.log)
-    .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('./static/js/'));
+  })
+  .transform('babelify', {presets: ['es2015', 'react']})
+  .bundle()
+  .pipe(source('bundle.js'))
+  .pipe(buffer())
+  .pipe(gulp.dest('static/js'))
 });
 
-gulp.task('javascript', ['homepage-js']);
+gulp.task('javascript-prod', function() {
+  process.env.NODE_ENV = 'production';
 
-gulp.task('build', ['javascript'])
+  return browserify({
+    entries: paths.app_js,
+    debug: false
+  })
+  .transform('babelify', {presets: ['es2015', 'react']})
+  .bundle()
+  .pipe(source('bundle.js'))
+  .pipe(buffer())
+  .pipe(uglify())
+    .on('error', gutil.log)
+  .pipe(gulp.dest('static/js'))
+});
+
+gulp.task('dev', ['javascript-dev'])
+
+gulp.task('prod', ['javascript-prod'])
 
 gulp.task('watch', function() {
-  gulp.watch(paths.javascript, ['javascript']);
+  gulp.watch(paths.js, ['javascript-dev']);
+  gulp.watch(paths.app_js, ['javascript-dev']);
 });
 
-gulp.task('default', ['watch', 'build']);
+gulp.task('default', ['watch', 'dev']);
