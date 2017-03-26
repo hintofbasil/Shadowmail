@@ -14,5 +14,7 @@ def set_up_client(request):
         app_context.pop()
     request.addfinalizer(tear_down_client)
 
-def test_null(set_up_client):
-    pass
+def test_new_email_get_invalid(set_up_client):
+    client = app.test_client()
+    response = client.get('/new')
+    assert response.status_code == 405
