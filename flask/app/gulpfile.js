@@ -10,11 +10,19 @@ var gutil = require('gulp-util');
 var del = require('del');
 var reactify = require('reactify');
 var fs = require('fs');
+var sass = require('gulp-sass');
 
 var paths = {
   js: 'js/**/*',
   app_js: 'js/app.jsx',
+  sass: 'sass/**/*.scss',
 }
+
+gulp.task('sass', function() {
+  return gulp.src(paths.sass)
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest('static/css'))
+});
 
 gulp.task('clean', function() {
   return del(['./static']);
@@ -48,13 +56,14 @@ gulp.task('javascript-prod', function() {
   .pipe(gulp.dest('static/js'))
 });
 
-gulp.task('dev', ['javascript-dev'])
+gulp.task('dev', ['javascript-dev', 'sass'])
 
-gulp.task('prod', ['javascript-prod'])
+gulp.task('prod', ['javascript-prod', 'sass'])
 
 gulp.task('watch', function() {
   gulp.watch(paths.js, ['javascript-dev']);
   gulp.watch(paths.app_js, ['javascript-dev']);
+  gulp.watch(paths.sass, ['sass']);
 });
 
 gulp.task('default', ['watch', 'dev']);
