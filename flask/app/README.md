@@ -12,3 +12,21 @@
 ### Run tests
 
     flask test
+
+## Static files
+
+### Development
+
+The development static files can be generated using
+
+    gulp dev
+
+or can be generated with watch enabled using
+
+    gulp
+
+### Production
+
+The production static files can be generated using
+
+    gulp prod
