@@ -9,6 +9,10 @@ class Config:
     SQLALCHEMY_DATABASE_URI = ''
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    EMAIL_POSTFIX = '@shadowmail.co.uk'
+    EMAIL_WORD_COUNT = 3
+    WORD_LIST_URI = 'wordlist.txt'
+
 class Development(Config):
     CSRF_ENABLED = False
     SECRET_KEY = 'change_me'
