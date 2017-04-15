@@ -60,10 +60,16 @@ def test_email_saved_in_database(set_up_client, clear_db):
     assert response.status_code == status.HTTP_201_CREATED
     jsonData = json.loads(response.get_data())
     aliases = VirtualAlias.query.all()
-    print (jsonData)
-    print (aliases[0])
-    print (len(aliases))
     assert len(aliases) == 1
     assert aliases[0].alias_email == jsonData['email']
     assert aliases[0].real_email == 'test@example.com'
     assert aliases[0].enabled == True
+
+def test_email_all_permutations_exhuasted(set_up_client, clear_db):
+    for i in range(6): # 6 permutations with 3 word test list
+        create_email_alias()
+    aliases = VirtualAlias.query.all()
+    assert len(aliases) == 6
+    response = create_email_alias()
+    assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
+    assert len(aliases) == 6

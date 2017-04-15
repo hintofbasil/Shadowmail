@@ -1,9 +1,12 @@
 from main import app, db
 from models.virtual_alias import VirtualAlias
+from sqlalchemy.exc import InvalidRequestError, IntegrityError
 
 from flask import request
 from flask_api import status
 
+from lazysorted import LazySorted
+import math
 import random
 
 @app.route('/new', methods=['POST'])
@@ -12,17 +15,24 @@ def new():
         return dict(
             status='Email missing'
         ), status.HTTP_400_BAD_REQUEST
-    email = generate_email()
-    alias = VirtualAlias(
-        alias_email=email,
-        real_email=request.get_json()['email']
-    )
-    db.session.add(alias)
-    db.session.commit()
+    emails = generate_emails()
+    for email in emails:
+        try:
+            alias = VirtualAlias(
+                alias_email=email,
+                real_email=request.get_json()['email']
+            )
+            db.session.add(alias)
+            db.session.commit()
+            return dict(
+                status='OK',
+                email=email
+            ), status.HTTP_201_CREATED
+        except (InvalidRequestError, IntegrityError):
+            db.session.rollback()
     return dict(
-        status='OK',
-        email=email
-    ), status.HTTP_201_CREATED
+        status='ERROR',
+    ), status.HTTP_500_INTERNAL_SERVER_ERROR
 
 def load_wordlist():
     # Not sure if can return in a with block
@@ -30,21 +40,18 @@ def load_wordlist():
     with open(app.config['WORD_LIST_URI'], 'r') as f:
         return f.readlines()
 
-def generate_random_words():
-    words = load_wordlist()
-    generated = []
-    max = app.config['EMAIL_WORD_COUNT']
-    # Swaps last element with used element
-    # to make algorithm O(n)
-    while max > 0:
-        max = max - 1
-        index = random.randint(0, len(words) - 1)
-        generated.append(words[index])
-        words[index] = words[-1]
-        del words[-1]
-    return generated
+# Taken from http://stackoverflow.com/a/5602615
+def generate_nth_permutation(words, n):
+    words = words[:]
+    for i in range(len(words)-1):
+        n, j = divmod(n, len(words)-i)
+        words[i], words[i+j] = words[i+j], words[i]
+    return words
 
-def generate_email():
-    words = generate_random_words()
-    email = ''.join(words) + app.config['EMAIL_POSTFIX']
-    return email.lower().replace('\n', '')
+def generate_emails():
+    words = load_wordlist()
+    perms = math.factorial(len(words))
+    for i in LazySorted(range(perms)):
+        permutation = generate_nth_permutation(words, i)
+        email = ''.join(permutation) + app.config['EMAIL_POSTFIX']
+        yield email.lower().replace('\n', '')
