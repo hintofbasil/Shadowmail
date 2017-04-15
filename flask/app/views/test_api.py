@@ -1,4 +1,7 @@
 from main import app, db
+from flask_api import status
+
+import json
 import pytest
 
 @pytest.fixture(scope='module')
@@ -17,4 +20,12 @@ def set_up_client(request):
 def test_new_email_get_invalid(set_up_client):
     client = app.test_client()
     response = client.get('/new')
-    assert response.status_code == 405
+    assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
+
+def test_new_email_arg_missing(set_up_client):
+    client = app.test_client()
+    data = dict()
+    data = json.dumps(data)
+    response = client.post('/new', data=data,
+                          content_type='application/json')
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
