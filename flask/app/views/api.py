@@ -1,4 +1,5 @@
-from main import app
+from main import app, db
+from models.virtual_alias import VirtualAlias
 
 from flask import request
 from flask_api import status
@@ -12,6 +13,12 @@ def new():
             status='Email missing'
         ), status.HTTP_400_BAD_REQUEST
     email = generate_email()
+    alias = VirtualAlias(
+        alias_email=email,
+        real_email=request.get_json()['email']
+    )
+    db.session.add(alias)
+    db.session.commit()
     return dict(
         status='OK',
         email=email
