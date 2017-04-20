@@ -49,11 +49,17 @@ def delete():
             status='ERROR',
             reason='Missing arguments'
         ), status.HTTP_400_BAD_REQUEST
-    verification_token = generate_token(data['email'])
+    verification_token = generate_token(data['email'],
+                                        timestamp=data['timestamp'])
     if verification_token != data['token']:
         return dict(
             status='ERROR',
             reason='Invalid token'
+        ), status.HTTP_400_BAD_REQUEST
+    if data['timestamp'] + app.config['DELETE_TOKEN_EXPIRY'] < time.time():
+        return dict(
+            status='ERROR',
+            reason='Token expired'
         ), status.HTTP_400_BAD_REQUEST
     return ""
 
@@ -62,7 +68,7 @@ def generate_token(email, timestamp=None):
     m.update(app.config['SECRET_KEY'].encode('utf-8'))
     m.update(email.encode('utf-8'))
     if timestamp is not None:
-        m.update(timestamp.encode('utf-8'))
+        m.update(str(timestamp).encode('utf-8'))
     else:
         m.update(str(int(time.time())).encode('utf-8'))
     return m.hexdigest()

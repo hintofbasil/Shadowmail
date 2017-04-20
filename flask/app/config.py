@@ -13,6 +13,8 @@ class Config:
     BEAUTIFURL_DICTIONARIES_URI = None
     BEAUTIFURL_FORMAT = 'aaA'
 
+    DELETE_TOKEN_EXPIRY = 60 * 30
+
 class Development(Config):
     CSRF_ENABLED = False
     SECRET_KEY = 'change_me'

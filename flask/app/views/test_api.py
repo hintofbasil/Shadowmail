@@ -1,5 +1,6 @@
 from main import app, db
 from models.virtual_alias import VirtualAlias
+from views.api import generate_token
 from flask_api import status
 
 from beautifurl import Beautifurl
@@ -99,3 +100,19 @@ def test_delete_token_incorrect(set_up_client):
                           content_type='application/json')
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert 'Invalid token' in str(response.data)
+
+def test_delete_expired(set_up_client):
+    client = app.test_client()
+    email = 'test@example.com'
+    timestamp = int(time.time()) - app.config['DELETE_TOKEN_EXPIRY'] - 1
+    token = generate_token(email, timestamp=timestamp)
+    data = dict(
+        email=email,
+        timestamp=timestamp,
+        token=token
+    )
+    data = json.dumps(data)
+    response = client.post('/delete', data=data,
+                          content_type='application/json')
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert 'Token expired' in str(response.data)
