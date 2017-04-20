@@ -3,8 +3,10 @@ from models.virtual_alias import VirtualAlias
 from flask_api import status
 
 from beautifurl import Beautifurl
+import hashlib
 import json
 import pytest
+import time
 
 @pytest.fixture(scope='module')
 def set_up_client(request):
@@ -82,3 +84,18 @@ def test_delete_email_get_invalid(set_up_client):
     client = app.test_client()
     response = client.get('/delete')
     assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
+
+def test_delete_token_incorrect(set_up_client):
+    client = app.test_client()
+    m = hashlib.sha256()
+    m.update(app.config['SECRET_KEY'].encode('utf-8'))
+    data = dict(
+        email='test@example.com',
+        timestamp=time.time(),
+        token=m.hexdigest()
+    )
+    data = json.dumps(data)
+    response = client.post('/delete', data=data,
+                          content_type='application/json')
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert 'Invalid token' in str(response.data)

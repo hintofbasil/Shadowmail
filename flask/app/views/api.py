@@ -6,8 +6,10 @@ from flask import request
 from flask_api import status
 
 from beautifurl import Beautifurl
+import hashlib
 import math
 import random
+import time
 
 @app.route('/new', methods=['POST'])
 def new():
@@ -39,4 +41,28 @@ def new():
 
 @app.route('/delete', methods=['POST'])
 def delete():
+    data = request.get_json(force=True)
+    if ('email' not in data
+        or 'timestamp' not in data
+        or 'token' not in data):
+        return dict(
+            status='ERROR',
+            reason='Missing arguments'
+        ), status.HTTP_400_BAD_REQUEST
+    verification_token = generate_token(data['email'])
+    if verification_token != data['token']:
+        return dict(
+            status='ERROR',
+            reason='Invalid token'
+        ), status.HTTP_400_BAD_REQUEST
     return ""
+
+def generate_token(email, timestamp=None):
+    m = hashlib.sha256()
+    m.update(app.config['SECRET_KEY'].encode('utf-8'))
+    m.update(email.encode('utf-8'))
+    if timestamp is not None:
+        m.update(timestamp.encode('utf-8'))
+    else:
+        m.update(str(int(time.time())).encode('utf-8'))
+    return m.hexdigest()
