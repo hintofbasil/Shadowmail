@@ -2,6 +2,7 @@ from main import app, db
 from models.virtual_alias import VirtualAlias
 from flask_api import status
 
+from beautifurl import Beautifurl
 import json
 import pytest
 
@@ -66,10 +67,13 @@ def test_email_saved_in_database(set_up_client, clear_db):
     assert aliases[0].enabled == True
 
 def test_email_all_permutations_exhuasted(set_up_client, clear_db):
-    for i in range(6): # 6 permutations with 3 word test list
+    dictionaryPath = app.config['BEAUTIFURL_DICTIONARIES_URI']
+    beautifurl = Beautifurl(dictionaryPath=dictionaryPath)
+    perms = beautifurl.count_permutations(app.config['BEAUTIFURL_FORMAT'])
+    for i in range(perms): # Generate all possible emails
         create_email_alias()
     aliases = VirtualAlias.query.all()
-    assert len(aliases) == 6
+    assert len(aliases) == perms
     response = create_email_alias()
     assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
-    assert len(aliases) == 6
+    assert len(aliases) == perms

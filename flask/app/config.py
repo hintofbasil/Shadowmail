@@ -10,13 +10,15 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     EMAIL_POSTFIX = '@shadowmail.co.uk'
-    EMAIL_WORD_COUNT = 3
-    WORD_LIST_URI = 'wordlist.txt'
+    BEAUTIFURL_DICTIONARIES_URI = None
+    BEAUTIFURL_FORMAT = 'aaA'
 
 class Development(Config):
     CSRF_ENABLED = False
     SECRET_KEY = 'change_me'
     SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/test.db'
+    BEAUTIFURL_DICTIONARIES_URI = 'test_dictionaries'
+    BEAUTIFURL_FORMAT = 'w'
 
 class Docker(Config):
     DEVELOPMENT = False

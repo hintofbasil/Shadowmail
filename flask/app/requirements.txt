@@ -1,4 +1,5 @@
 appdirs==1.4.0
+beautifurl==0.0.2
 click==6.7
 Flask==0.12
 Flask-API==0.7.1
