@@ -77,3 +77,8 @@ def test_email_all_permutations_exhuasted(set_up_client, clear_db):
     response = create_email_alias()
     assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
     assert len(aliases) == perms
+
+def test_delete_email_get_invalid(set_up_client):
+    client = app.test_client()
+    response = client.get('/delete')
+    assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED

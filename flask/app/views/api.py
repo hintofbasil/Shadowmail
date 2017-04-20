@@ -36,3 +36,7 @@ def new():
     return dict(
         status='ERROR',
     ), status.HTTP_500_INTERNAL_SERVER_ERROR
+
+@app.route('/delete', methods=['POST'])
+def delete():
+    return ""
