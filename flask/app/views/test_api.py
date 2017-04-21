@@ -132,3 +132,46 @@ def test_invalid_email(set_up_client):
                           content_type='application/json')
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert 'Email address not found' in str(response.data)
+
+def test_valid_delete(set_up_client, clear_db):
+    response = create_email_alias()
+    assert len(VirtualAlias.query.all()) == 1
+    jsonData = json.loads(response.get_data())
+    email = jsonData['email']
+
+    client = app.test_client()
+    timestamp = int(time.time())
+    token = generate_token(email, timestamp=timestamp)
+    data = dict(
+        email=email,
+        timestamp=timestamp,
+        token=token
+    )
+    data = json.dumps(data)
+    response = client.post('/delete', data=data,
+                          content_type='application/json')
+    assert response.status_code == status.HTTP_200_OK
+    assert len(VirtualAlias.query.all()) == 1
+    assert VirtualAlias.query.get(1).enabled == False
+
+def test_double_delete(set_up_client, clear_db):
+    response = create_email_alias()
+    assert len(VirtualAlias.query.all()) == 1
+    jsonData = json.loads(response.get_data())
+    email = jsonData['email']
+
+    client = app.test_client()
+    timestamp = int(time.time())
+    token = generate_token(email, timestamp=timestamp)
+    data = dict(
+        email=email,
+        timestamp=timestamp,
+        token=token
+    )
+    data = json.dumps(data)
+    client.post('/delete', data=data,
+                content_type='application/json')
+    response = client.post('/delete', data=data,
+                           content_type='application/json')
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert 'Email address not found' in str(response.data)
