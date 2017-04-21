@@ -76,6 +76,10 @@ def delete():
         status='OK',
     ), status.HTTP_200_OK
 
+@app.route('/request_delete', methods=['POST'])
+def request_delete():
+    pass
+
 def generate_token(email, timestamp=None):
     m = hashlib.sha256()
     m.update(app.config['SECRET_KEY'].encode('utf-8'))
