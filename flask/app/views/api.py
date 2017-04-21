@@ -78,7 +78,22 @@ def delete():
 
 @app.route('/request_delete', methods=['POST'])
 def request_delete():
-    pass
+    data = request.get_json(force=True)
+    if 'email' not in data:
+        return dict(
+            status='ERROR',
+            reason='Missing arguments'
+        ), status.HTTP_400_BAD_REQUEST
+    alias = VirtualAlias.query.filter_by(
+        alias_email=data['email'],
+        enabled=True
+    ).first()
+    if alias is None:
+        return dict(
+            status='ERROR',
+            reason='Email address not found'
+        ), status.HTTP_400_BAD_REQUEST
+    return ""
 
 def generate_token(email, timestamp=None):
     m = hashlib.sha256()

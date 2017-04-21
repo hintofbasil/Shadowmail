@@ -181,3 +181,15 @@ def test_request_delete_get_invalid(set_up_client):
     client = app.test_client()
     response = client.get('/request_delete')
     assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
+
+def test_request_delete_user_doesnt_exist(set_up_client):
+    client = app.test_client()
+    email = 'test@example.com'
+    data = dict(
+        email=email,
+    )
+    data = json.dumps(data)
+    response = client.post('/request_delete', data=data,
+                           content_type='application/json')
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert 'Email address not found' in str(response.data)
