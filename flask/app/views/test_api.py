@@ -151,6 +151,7 @@ def test_valid_delete(set_up_client, clear_db):
     response = client.post('/delete', data=data,
                           content_type='application/json')
     assert response.status_code == status.HTTP_200_OK
+    assert 'OK' in str(response.data)
     assert len(VirtualAlias.query.all()) == 1
     assert VirtualAlias.query.get(1).enabled == False
 

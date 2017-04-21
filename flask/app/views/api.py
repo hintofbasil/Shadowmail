@@ -72,7 +72,9 @@ def delete():
         ), status.HTTP_400_BAD_REQUEST
     alias.enabled = False
     db.session.commit()
-    return ""
+    return dict(
+        status='OK',
+    ), status.HTTP_200_OK
 
 def generate_token(email, timestamp=None):
     m = hashlib.sha256()
