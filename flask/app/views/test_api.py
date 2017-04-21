@@ -7,6 +7,7 @@ from beautifurl import Beautifurl
 import hashlib
 import json
 import pytest
+import re
 import time
 
 @pytest.fixture(scope='module')
@@ -235,3 +236,7 @@ def test_request_delete_email_created(set_up_client, clear_db):
         assert msg.subject == app.config['MAIL_DELETE_REQUEST_SUBJECT']
         assert msg.sender == app.config['MAIL_SENDER']
         assert msg.recipients == [email]
+        link_regex = r'https://(www)?shadowmail\.co\.uk/delete/\?email=' + email
+        link_regex += r'&time=\d{10}&token=[0-9a-f]{64}'
+        m = re.compile(link_regex)
+        assert m.search(msg.body) is not None

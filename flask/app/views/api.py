@@ -94,10 +94,15 @@ def request_delete():
             status='ERROR',
             reason='Email address not found'
         ), status.HTTP_400_BAD_REQUEST
+    link = generate_delete_link(data['email'])
+    body=app.config['MAIL_DELETE_REQUEST_BODY'].format(
+        email=data['email'],
+        link=link
+    )
     msg = Message(subject=app.config['MAIL_DELETE_REQUEST_SUBJECT'],
                   sender=app.config['MAIL_SENDER'],
                   recipients=[data['email']],
-                  body=app.config['MAIL_DELETE_REQUEST_BODY']
+                  body=body
                  )
     mail.send(msg)
     return dict(
@@ -113,3 +118,12 @@ def generate_token(email, timestamp=None):
     else:
         m.update(str(int(time.time())).encode('utf-8'))
     return m.hexdigest()
+
+def generate_delete_link(email):
+    timestamp = str(int(time.time()))
+    token = generate_token(email, timestamp=timestamp)
+    link = 'https://shadowmail.co.uk/delete/?'
+    link += 'email=' + email
+    link += '&time=' + timestamp
+    link += '&token=' + token
+    return link

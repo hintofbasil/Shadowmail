@@ -1,5 +1,9 @@
 import os
 
+def load_email(email):
+    with open('emails/' + email, 'r') as f:
+        return f.read()
+
 class Config:
     DEBUG = True
     TESTING = True
@@ -17,7 +21,7 @@ class Config:
 
     MAIL_SENDER = 'no-reply@shadowmail.co.uk'
     MAIL_DELETE_REQUEST_SUBJECT = 'Shadowmail Delete Request'
-    MAIL_DELETE_REQUEST_BODY = 'TODO'
+    MAIL_DELETE_REQUEST_BODY = load_email('request_delete')
 
 class Development(Config):
     CSRF_ENABLED = False
