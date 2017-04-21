@@ -193,3 +193,23 @@ def test_request_delete_user_doesnt_exist(set_up_client):
                            content_type='application/json')
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert 'Email address not found' in str(response.data)
+
+def test_request_delete_user_disabled(set_up_client, clear_db):
+    response = create_email_alias()
+    assert len(VirtualAlias.query.all()) == 1
+    jsonData = json.loads(response.get_data())
+    email = jsonData['email']
+
+    VirtualAlias.query.get(1).enabled = False
+    db.session.commit()
+    assert VirtualAlias.query.get(1).enabled == False
+
+    client = app.test_client()
+    data = dict(
+        email=email,
+    )
+    data = json.dumps(data)
+    response = client.post('/request_delete', data=data,
+                           content_type='application/json')
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert 'Email address not found' in str(response.data)
