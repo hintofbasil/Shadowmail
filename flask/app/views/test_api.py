@@ -116,3 +116,19 @@ def test_delete_expired(set_up_client):
                           content_type='application/json')
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert 'Token expired' in str(response.data)
+
+def test_invalid_email(set_up_client):
+    client = app.test_client()
+    email = 'test@example.com'
+    timestamp = int(time.time())
+    token = generate_token(email, timestamp=timestamp)
+    data = dict(
+        email=email,
+        timestamp=timestamp,
+        token=token
+    )
+    data = json.dumps(data)
+    response = client.post('/delete', data=data,
+                          content_type='application/json')
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert 'Email address not found' in str(response.data)

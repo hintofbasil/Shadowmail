@@ -61,6 +61,13 @@ def delete():
             status='ERROR',
             reason='Token expired'
         ), status.HTTP_400_BAD_REQUEST
+    alias = VirtualAlias.query.filter_by(alias_email = data['email']).first()
+    if alias is None:
+        return dict(
+            status='ERROR',
+            reason='Email address not found'
+        ), status.HTTP_400_BAD_REQUEST
+
     return ""
 
 def generate_token(email, timestamp=None):
