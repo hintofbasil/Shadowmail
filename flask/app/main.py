@@ -4,12 +4,15 @@ import os
 from flask import Flask
 from flask_api import FlaskAPI
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail
 
 app = FlaskAPI(__name__)
 
 app.config.from_object('config.' + os.environ['APP_SETTINGS'])
 
 db = SQLAlchemy(app)
+
+mail = Mail(app)
 
 from models.virtual_alias import *
 from views.api import *

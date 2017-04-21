@@ -1,9 +1,10 @@
-from main import app, db
+from main import app, db, mail
 from models.virtual_alias import VirtualAlias
 from sqlalchemy.exc import InvalidRequestError, IntegrityError
 
 from flask import request
 from flask_api import status
+from flask_mail import Message
 
 from beautifurl import Beautifurl
 import hashlib
@@ -93,7 +94,15 @@ def request_delete():
             status='ERROR',
             reason='Email address not found'
         ), status.HTTP_400_BAD_REQUEST
-    return ""
+    msg = Message(subject=app.config['MAIL_DELETE_REQUEST_SUBJECT'],
+                  sender=app.config['MAIL_SENDER'],
+                  recipients=[data['email']],
+                  body=app.config['MAIL_DELETE_REQUEST_BODY']
+                 )
+    mail.send(msg)
+    return dict(
+        status='OK',
+    ), status.HTTP_200_OK
 
 def generate_token(email, timestamp=None):
     m = hashlib.sha256()

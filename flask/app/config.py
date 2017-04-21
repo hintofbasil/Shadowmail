@@ -15,6 +15,10 @@ class Config:
 
     DELETE_TOKEN_EXPIRY = 60 * 30
 
+    MAIL_SENDER = 'no-reply@shadowmail.co.uk'
+    MAIL_DELETE_REQUEST_SUBJECT = 'Shadowmail Delete Request'
+    MAIL_DELETE_REQUEST_BODY = 'TODO'
+
 class Development(Config):
     CSRF_ENABLED = False
     SECRET_KEY = 'change_me'

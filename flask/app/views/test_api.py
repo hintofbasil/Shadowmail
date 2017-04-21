@@ -1,4 +1,4 @@
-from main import app, db
+from main import app, db, mail
 from models.virtual_alias import VirtualAlias
 from views.api import generate_token
 from flask_api import status
@@ -213,3 +213,25 @@ def test_request_delete_user_disabled(set_up_client, clear_db):
                            content_type='application/json')
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert 'Email address not found' in str(response.data)
+
+def test_request_delete_email_created(set_up_client, clear_db):
+    response = create_email_alias()
+    assert len(VirtualAlias.query.all()) == 1
+    jsonData = json.loads(response.get_data())
+    email = jsonData['email']
+
+    client = app.test_client()
+    data = dict(
+        email=email,
+    )
+    data = json.dumps(data)
+    with mail.record_messages() as outbox:
+        response = client.post('/request_delete', data=data,
+                               content_type='application/json')
+        assert response.status_code == status.HTTP_200_OK
+        assert 'OK' in str(response.data)
+        assert len(outbox) == 1
+        msg = outbox[0]
+        assert msg.subject == app.config['MAIL_DELETE_REQUEST_SUBJECT']
+        assert msg.sender == app.config['MAIL_SENDER']
+        assert msg.recipients == [email]
