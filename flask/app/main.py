@@ -4,6 +4,7 @@ import os
 from flask import Flask
 from flask_api import FlaskAPI
 from flask_sqlalchemy import SQLAlchemy
+from flask_limiter import Limiter
 from flask_mail import Mail
 
 app = FlaskAPI(__name__)
@@ -11,6 +12,8 @@ app = FlaskAPI(__name__)
 app.config.from_object('config.' + os.environ['APP_SETTINGS'])
 
 db = SQLAlchemy(app)
+
+limiter = Limiter(app)
 
 mail = Mail(app)
 

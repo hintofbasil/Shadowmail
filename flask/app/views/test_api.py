@@ -1,4 +1,4 @@
-from main import app, db, mail
+from main import app, db, limiter, mail
 from models.virtual_alias import VirtualAlias
 from views.api import generate_token
 from flask_api import status
@@ -30,6 +30,12 @@ def clear_db(request):
     db.create_all()
     db.session.commit()
 
+@pytest.fixture()
+def reset_limits(request):
+    def reset_client_limits():
+        limiter.reset()
+    request.addfinalizer(reset_client_limits)
+
 def create_email_alias():
     client = app.test_client()
     data = dict(
@@ -40,12 +46,12 @@ def create_email_alias():
                           content_type='application/json')
     return response
 
-def test_new_email_get_invalid(set_up_client):
+def test_new_email_get_invalid(set_up_client, reset_limits):
     client = app.test_client()
     response = client.get('/new')
     assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
 
-def test_new_email_arg_missing(set_up_client):
+def test_new_email_arg_missing(set_up_client, reset_limits):
     client = app.test_client()
     data = dict()
     data = json.dumps(data)
@@ -53,14 +59,14 @@ def test_new_email_arg_missing(set_up_client):
                           content_type='application/json')
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-def test_generate_valid_email(set_up_client):
+def test_generate_valid_email(set_up_client, reset_limits):
     response = create_email_alias()
     assert response.status_code == status.HTTP_201_CREATED
     jsonData = json.loads(response.get_data())
     assert jsonData['email'].endswith(app.config['EMAIL_POSTFIX'])
     assert '\n' not in jsonData['email']
 
-def test_email_saved_in_database(set_up_client, clear_db):
+def test_email_saved_in_database(set_up_client, reset_limits, clear_db):
     response = create_email_alias()
     assert response.status_code == status.HTTP_201_CREATED
     jsonData = json.loads(response.get_data())
@@ -70,8 +76,10 @@ def test_email_saved_in_database(set_up_client, clear_db):
     assert aliases[0].real_email == 'test@example.com'
     assert aliases[0].enabled == True
 
-def test_email_all_permutations_exhuasted(set_up_client, clear_db):
+def test_email_all_permutations_exhuasted(set_up_client, reset_limits, clear_db):
     dictionaryPath = app.config['BEAUTIFURL_DICTIONARIES_URI']
+    # Need to reduce permutations to avoid ip rate limiting
+    app.config['BEAUTIFURL_FORMAT'] = 'ww'
     beautifurl = Beautifurl(dictionaryPath=dictionaryPath)
     perms = beautifurl.count_permutations(app.config['BEAUTIFURL_FORMAT'])
     for i in range(perms): # Generate all possible emails
@@ -82,12 +90,12 @@ def test_email_all_permutations_exhuasted(set_up_client, clear_db):
     assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
     assert len(aliases) == perms
 
-def test_delete_email_get_invalid(set_up_client):
+def test_delete_email_get_invalid(set_up_client, reset_limits):
     client = app.test_client()
     response = client.get('/delete')
     assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
 
-def test_delete_token_incorrect(set_up_client):
+def test_delete_token_incorrect(set_up_client, reset_limits):
     client = app.test_client()
     m = hashlib.sha256()
     m.update(app.config['SECRET_KEY'].encode('utf-8'))
@@ -102,7 +110,7 @@ def test_delete_token_incorrect(set_up_client):
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert 'Invalid token' in str(response.data)
 
-def test_delete_expired(set_up_client):
+def test_delete_expired(set_up_client, reset_limits):
     client = app.test_client()
     email = 'test@example.com'
     timestamp = int(time.time()) - app.config['DELETE_TOKEN_EXPIRY'] - 1
@@ -118,7 +126,7 @@ def test_delete_expired(set_up_client):
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert 'Token expired' in str(response.data)
 
-def test_invalid_email(set_up_client):
+def test_invalid_email(set_up_client, reset_limits):
     client = app.test_client()
     email = 'test@example.com'
     timestamp = int(time.time())
@@ -134,7 +142,7 @@ def test_invalid_email(set_up_client):
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert 'Email address not found' in str(response.data)
 
-def test_valid_delete(set_up_client, clear_db):
+def test_valid_delete(set_up_client, reset_limits, clear_db):
     response = create_email_alias()
     assert len(VirtualAlias.query.all()) == 1
     jsonData = json.loads(response.get_data())
@@ -156,7 +164,7 @@ def test_valid_delete(set_up_client, clear_db):
     assert len(VirtualAlias.query.all()) == 1
     assert VirtualAlias.query.get(1).enabled == False
 
-def test_double_delete(set_up_client, clear_db):
+def test_double_delete(set_up_client, reset_limits, clear_db):
     response = create_email_alias()
     assert len(VirtualAlias.query.all()) == 1
     jsonData = json.loads(response.get_data())
@@ -178,12 +186,12 @@ def test_double_delete(set_up_client, clear_db):
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert 'Email address not found' in str(response.data)
 
-def test_request_delete_get_invalid(set_up_client):
+def test_request_delete_get_invalid(set_up_client, reset_limits):
     client = app.test_client()
     response = client.get('/request_delete')
     assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
 
-def test_request_delete_user_doesnt_exist(set_up_client):
+def test_request_delete_user_doesnt_exist(set_up_client, reset_limits):
     client = app.test_client()
     email = 'test@example.com'
     data = dict(
@@ -195,7 +203,7 @@ def test_request_delete_user_doesnt_exist(set_up_client):
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert 'Email address not found' in str(response.data)
 
-def test_request_delete_user_disabled(set_up_client, clear_db):
+def test_request_delete_user_disabled(set_up_client, reset_limits, clear_db):
     response = create_email_alias()
     assert len(VirtualAlias.query.all()) == 1
     jsonData = json.loads(response.get_data())
@@ -215,7 +223,7 @@ def test_request_delete_user_disabled(set_up_client, clear_db):
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert 'Email address not found' in str(response.data)
 
-def test_request_delete_email_created(set_up_client, clear_db):
+def test_request_delete_email_created(set_up_client, reset_limits, clear_db):
     response = create_email_alias()
     assert len(VirtualAlias.query.all()) == 1
     jsonData = json.loads(response.get_data())
@@ -240,3 +248,13 @@ def test_request_delete_email_created(set_up_client, clear_db):
         link_regex += r'&time=\d{10}&token=[0-9a-f]{64}'
         m = re.compile(link_regex)
         assert m.search(msg.body) is not None
+
+def test_create_rate_limit_ip(set_up_client, reset_limits, clear_db):
+    limit = int(app.config['IP_RATE_LIMIT'].split('/')[0])
+    # Need to extend possibilities to hit rate limit
+    app.config['BEAUTIFURL_FORMAT'] = 'www'
+    for _ in range(limit):
+        response = create_email_alias()
+        assert response.status_code == status.HTTP_201_CREATED
+    response = create_email_alias()
+    assert response.status_code == status.HTTP_429_TOO_MANY_REQUESTS

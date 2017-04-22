@@ -23,6 +23,8 @@ class Config:
     MAIL_DELETE_REQUEST_SUBJECT = 'Shadowmail Delete Request'
     MAIL_DELETE_REQUEST_BODY = load_email('request_delete')
 
+    IP_RATE_LIMIT = '10/30minutes'
+
 class Development(Config):
     CSRF_ENABLED = False
     SECRET_KEY = 'change_me'

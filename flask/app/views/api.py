@@ -1,10 +1,11 @@
-from main import app, db, mail
+from main import app, db, limiter, mail
 from models.virtual_alias import VirtualAlias
 from sqlalchemy.exc import InvalidRequestError, IntegrityError
 
 from flask import request
 from flask_api import status
 from flask_mail import Message
+from flask_limiter.util import get_remote_address
 
 from beautifurl import Beautifurl
 import hashlib
@@ -13,6 +14,7 @@ import random
 import time
 
 @app.route('/new', methods=['POST'])
+@limiter.limit(app.config['IP_RATE_LIMIT'], get_remote_address)
 def new():
     if 'email' not in request.get_json(force=True):
         return dict(
