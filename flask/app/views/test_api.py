@@ -258,3 +258,19 @@ def test_create_rate_limit_ip(set_up_client, reset_limits, clear_db):
         assert response.status_code == status.HTTP_201_CREATED
     response = create_email_alias()
     assert response.status_code == status.HTTP_429_TOO_MANY_REQUESTS
+
+def test_request_delete_rate_limit_ip(set_up_client, reset_limits, clear_db):
+    client = app.test_client()
+    limit = int(app.config['IP_RATE_LIMIT'].split('/')[0])
+    for i in range(limit):
+        # Ensure each email unique to avoid email rate limit
+        # Binary just for fun
+        data = dict(
+            email='{0:b}@shadowmail.co.uk'.format(i),
+        )
+        response = client.post('/request_delete', data=data,
+                               content_type='application/json')
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+    response = client.post('/request_delete', data=data,
+                           content_type='application/json')
+    assert response.status_code == status.HTTP_429_TOO_MANY_REQUESTS

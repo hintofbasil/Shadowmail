@@ -80,6 +80,7 @@ def delete():
     ), status.HTTP_200_OK
 
 @app.route('/request_delete', methods=['POST'])
+@limiter.limit(app.config['IP_RATE_LIMIT'], get_remote_address)
 def request_delete():
     data = request.get_json(force=True)
     if 'email' not in data:
