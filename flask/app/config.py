@@ -40,3 +40,7 @@ class Docker(Config):
     TESTING = False
     SECRET_KEY = os.environ['SECRET_KEY']
     SQLALCHEMY_DATABASE_URI = 'mysql://flask:' + os.environ['DB_PASSWORD'] + '@db/shadowmail'
+
+    MAIL_SERVER = 'postfix'
+    MAIL_PORT = 465
+    MAIL_USE_TLS = True
