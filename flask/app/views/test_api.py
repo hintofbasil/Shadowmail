@@ -274,9 +274,15 @@ def test_request_delete_rate_limit_ip(set_up_client, reset_limits, clear_db):
         data = dict(
             email='{0:b}@shadowmail.co.uk'.format(i),
         )
+        data = json.dumps(data)
         response = client.post('/request_delete', data=data,
                                content_type='application/json')
         assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert 'Email address not found' in str(response.data)
+    data = dict(
+        email='{0:b}@shadowmail.co.uk'.format(i + 1),
+    )
+    data = json.dumps(data)
     response = client.post('/request_delete', data=data,
                            content_type='application/json')
     assert response.status_code == status.HTTP_429_TOO_MANY_REQUESTS
@@ -293,5 +299,33 @@ def test_create_rate_limit_email(set_up_client, reset_limits, clear_db):
         response = create_email_alias()
         assert response.status_code == status.HTTP_201_CREATED
     response = create_email_alias()
+    assert response.status_code == status.HTTP_429_TOO_MANY_REQUESTS
+    assert 'Exceeded limit for same email address' in str(response.data)
+
+def test_request_delete_limit_email(set_up_client, reset_limits, clear_db):
+    client = app.test_client()
+    limit = int(app.config['CREATE_EMAIL_RATE_LIMIT'].split('/')[0])
+    ipLimit = int(app.config['IP_RATE_LIMIT'].split('/')[0])
+    # Must hit email limit first
+    assert limit < ipLimit
+    response = create_email_alias()
+    data = json.loads(response.data)
+    email = data['email']
+    assert response.status_code == status.HTTP_201_CREATED
+    # Legitimate request
+    data = dict(
+        email=email,
+    )
+    data = json.dumps(data)
+    response = client.post('/request_delete', data=data,
+                           content_type='application/json')
+    assert response.status_code == status.HTTP_200_OK
+    #Double request
+    data = dict(
+        email=email,
+    )
+    data = json.dumps(data)
+    response = client.post('/request_delete', data=data,
+                           content_type='application/json')
     assert response.status_code == status.HTTP_429_TOO_MANY_REQUESTS
     assert 'Exceeded limit for same email address' in str(response.data)

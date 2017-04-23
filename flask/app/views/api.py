@@ -106,6 +106,9 @@ def delete():
 @ipLimiter.limit(app.config['IP_RATE_LIMIT'],
                  get_remote_address,
                  error_message=ip_error_message)
+@emailLimiter.limit(app.config['REQUEST_DELETE_RATE_LIMIT'],
+                 get_email_from_request,
+                 error_message=create_email_error_message)
 def request_delete():
     data = request.get_json(force=True)
     if 'email' not in data:
