@@ -258,6 +258,7 @@ def test_create_rate_limit_ip(set_up_client, reset_limits, clear_db):
         assert response.status_code == status.HTTP_201_CREATED
     response = create_email_alias()
     assert response.status_code == status.HTTP_429_TOO_MANY_REQUESTS
+    assert 'Exceeded limit from same ip address' in str(response.data)
 
 def test_request_delete_rate_limit_ip(set_up_client, reset_limits, clear_db):
     client = app.test_client()
@@ -274,3 +275,4 @@ def test_request_delete_rate_limit_ip(set_up_client, reset_limits, clear_db):
     response = client.post('/request_delete', data=data,
                            content_type='application/json')
     assert response.status_code == status.HTTP_429_TOO_MANY_REQUESTS
+    assert 'Exceeded limit from same ip address' in str(response.data)

@@ -8,13 +8,20 @@ from flask_mail import Message
 from flask_limiter.util import get_remote_address
 
 from beautifurl import Beautifurl
+import limits
 import hashlib
 import math
 import random
 import time
 
+ip_error_message = 'Exceeded limit from same ip address: %s'.format(
+    limits.parse(app.config['IP_RATE_LIMIT'])
+)
+
 @app.route('/new', methods=['POST'])
-@limiter.limit(app.config['IP_RATE_LIMIT'], get_remote_address)
+@limiter.limit(app.config['IP_RATE_LIMIT'],
+                 get_remote_address,
+                 error_message=ip_error_message)
 def new():
     if 'email' not in request.get_json(force=True):
         return dict(
@@ -80,7 +87,9 @@ def delete():
     ), status.HTTP_200_OK
 
 @app.route('/request_delete', methods=['POST'])
-@limiter.limit(app.config['IP_RATE_LIMIT'], get_remote_address)
+@limiter.limit(app.config['IP_RATE_LIMIT'],
+                 get_remote_address,
+                 error_message=ip_error_message)
 def request_delete():
     data = request.get_json(force=True)
     if 'email' not in data:
