@@ -13,7 +13,8 @@ app.config.from_object('config.' + os.environ['APP_SETTINGS'])
 
 db = SQLAlchemy(app)
 
-limiter = Limiter(app)
+emailLimiter = Limiter(app)
+ipLimiter = Limiter(app)
 
 mail = Mail(app)
 

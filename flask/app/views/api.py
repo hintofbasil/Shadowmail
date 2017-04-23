@@ -1,4 +1,4 @@
-from main import app, db, limiter, mail
+from main import app, db, emailLimiter, ipLimiter, mail
 from models.virtual_alias import VirtualAlias
 from sqlalchemy.exc import InvalidRequestError, IntegrityError
 
@@ -14,14 +14,30 @@ import math
 import random
 import time
 
+@emailLimiter.request_filter
+def no_email_whitelist():
+    data = request.get_json(force=True)
+    return data is None or 'email' not in data
+
+def get_email_from_request():
+    data = request.get_json(force=True)
+    return data['email']
+
 ip_error_message = 'Exceeded limit from same ip address: %s'.format(
     limits.parse(app.config['IP_RATE_LIMIT'])
 )
 
+create_email_error_message = 'Exceeded limit for same email address: %s'.format(
+    limits.parse(app.config['CREATE_EMAIL_RATE_LIMIT'])
+)
+
 @app.route('/new', methods=['POST'])
-@limiter.limit(app.config['IP_RATE_LIMIT'],
+@ipLimiter.limit(app.config['IP_RATE_LIMIT'],
                  get_remote_address,
                  error_message=ip_error_message)
+@emailLimiter.limit(app.config['CREATE_EMAIL_RATE_LIMIT'],
+                 get_email_from_request,
+                 error_message=create_email_error_message)
 def new():
     if 'email' not in request.get_json(force=True):
         return dict(
@@ -87,7 +103,7 @@ def delete():
     ), status.HTTP_200_OK
 
 @app.route('/request_delete', methods=['POST'])
-@limiter.limit(app.config['IP_RATE_LIMIT'],
+@ipLimiter.limit(app.config['IP_RATE_LIMIT'],
                  get_remote_address,
                  error_message=ip_error_message)
 def request_delete():

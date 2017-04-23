@@ -24,6 +24,7 @@ class Config:
     MAIL_DELETE_REQUEST_BODY = load_email('request_delete')
 
     IP_RATE_LIMIT = '10/30minutes'
+    CREATE_EMAIL_RATE_LIMIT = '3/30minutes'
 
 class Development(Config):
     CSRF_ENABLED = False

@@ -1,4 +1,4 @@
-from main import app, db, limiter, mail
+from main import app, db, emailLimiter, ipLimiter, mail
 from models.virtual_alias import VirtualAlias
 from views.api import generate_token
 from flask_api import status
@@ -33,13 +33,18 @@ def clear_db(request):
 @pytest.fixture()
 def reset_limits(request):
     def reset_client_limits():
-        limiter.reset()
+        emailLimiter.reset()
+        ipLimiter.reset()
     request.addfinalizer(reset_client_limits)
 
-def create_email_alias():
+def create_email_alias(prefix=None):
     client = app.test_client()
+    if prefix is not None:
+        email = str(prefix) + '@example.com'
+    else:
+        email = 'test@example.com'
     data = dict(
-        email='test@example.com'
+        email=email
     )
     data = json.dumps(data)
     response = client.post('/new', data=data,
@@ -83,7 +88,7 @@ def test_email_all_permutations_exhuasted(set_up_client, reset_limits, clear_db)
     beautifurl = Beautifurl(dictionaryPath=dictionaryPath)
     perms = beautifurl.count_permutations(app.config['BEAUTIFURL_FORMAT'])
     for i in range(perms): # Generate all possible emails
-        create_email_alias()
+        create_email_alias(i)
     aliases = VirtualAlias.query.all()
     assert len(aliases) == perms
     response = create_email_alias()
@@ -253,8 +258,8 @@ def test_create_rate_limit_ip(set_up_client, reset_limits, clear_db):
     limit = int(app.config['IP_RATE_LIMIT'].split('/')[0])
     # Need to extend possibilities to hit rate limit
     app.config['BEAUTIFURL_FORMAT'] = 'www'
-    for _ in range(limit):
-        response = create_email_alias()
+    for i in range(limit):
+        response = create_email_alias(prefix=i)
         assert response.status_code == status.HTTP_201_CREATED
     response = create_email_alias()
     assert response.status_code == status.HTTP_429_TOO_MANY_REQUESTS
@@ -276,3 +281,17 @@ def test_request_delete_rate_limit_ip(set_up_client, reset_limits, clear_db):
                            content_type='application/json')
     assert response.status_code == status.HTTP_429_TOO_MANY_REQUESTS
     assert 'Exceeded limit from same ip address' in str(response.data)
+
+def test_create_rate_limit_email(set_up_client, reset_limits, clear_db):
+    limit = int(app.config['CREATE_EMAIL_RATE_LIMIT'].split('/')[0])
+    ipLimit = int(app.config['IP_RATE_LIMIT'].split('/')[0])
+    # Must hit email limit first
+    assert limit < ipLimit
+    # Need to extend possibilities to hit rate limit
+    app.config['BEAUTIFURL_FORMAT'] = 'www'
+    for _ in range(limit):
+        response = create_email_alias()
+        assert response.status_code == status.HTTP_201_CREATED
+    response = create_email_alias()
+    assert response.status_code == status.HTTP_429_TOO_MANY_REQUESTS
+    assert 'Exceeded limit for same email address' in str(response.data)
