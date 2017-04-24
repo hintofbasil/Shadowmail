@@ -47,3 +47,4 @@ services:
       - db
     volumes:
       - /var/log/nginx:/var/log/nginx
+      - ${SSL_LOCATION}:/ssl:ro
