@@ -6,6 +6,8 @@ COPY ./app /app
 
 COPY ./etc /etc
 
+RUN rm /etc/nginx/conf.d/nginx.conf
+
 RUN pip install -r /app/requirements.txt
 
 # Install NodeJS - requires additional repository
