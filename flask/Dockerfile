@@ -4,6 +4,8 @@ ENV FLASK_APP /app/main.py
 
 COPY ./app /app
 
+COPY ./etc /etc
+
 RUN pip install -r /app/requirements.txt
 
 # Install NodeJS - requires additional repository
