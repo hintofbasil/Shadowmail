@@ -38,6 +38,7 @@ services:
     build: ./flask
     ports:
       - "80:80"
+      - "443:443"
     environment:
       APP_SETTINGS: 'Docker'
       DB_PASSWORD: ${FLASK_DB_PASSWORD}
