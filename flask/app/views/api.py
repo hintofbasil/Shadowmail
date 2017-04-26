@@ -23,12 +23,16 @@ def get_email_from_request():
     data = request.get_json(force=True)
     return data['email']
 
-ip_error_message = 'Exceeded limit from same ip address: %s'.format(
+ip_error_message = 'Exceeded limit from same ip address: {}'.format(
     limits.parse(app.config['IP_RATE_LIMIT'])
 )
 
-create_email_error_message = 'Exceeded limit for same email address: %s'.format(
+create_email_error_message = 'Exceeded limit for same email address: {}'.format(
     limits.parse(app.config['CREATE_EMAIL_RATE_LIMIT'])
+)
+
+request_delete_error_message = 'Exceeded limit for same email address: {}'.format(
+    limits.parse(app.config['REQUEST_DELETE_RATE_LIMIT'])
 )
 
 @app.route('/new', methods=['POST'])
@@ -108,7 +112,7 @@ def delete():
                  error_message=ip_error_message)
 @emailLimiter.limit(app.config['REQUEST_DELETE_RATE_LIMIT'],
                  get_email_from_request,
-                 error_message=create_email_error_message)
+                 error_message=request_delete_error_message)
 def request_delete():
     data = request.get_json(force=True)
     if 'email' not in data:

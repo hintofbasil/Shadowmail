@@ -6,6 +6,7 @@ from flask_api import status
 from beautifurl import Beautifurl
 import hashlib
 import json
+import limits
 import pytest
 import re
 import time
@@ -264,6 +265,8 @@ def test_create_rate_limit_ip(set_up_client, reset_limits, clear_db):
     response = create_email_alias()
     assert response.status_code == status.HTTP_429_TOO_MANY_REQUESTS
     assert 'Exceeded limit from same ip address' in str(response.data)
+    limit = str(limits.parse(app.config['IP_RATE_LIMIT']))
+    assert limit in str(response.data)
 
 def test_request_delete_rate_limit_ip(set_up_client, reset_limits, clear_db):
     client = app.test_client()
@@ -287,6 +290,8 @@ def test_request_delete_rate_limit_ip(set_up_client, reset_limits, clear_db):
                            content_type='application/json')
     assert response.status_code == status.HTTP_429_TOO_MANY_REQUESTS
     assert 'Exceeded limit from same ip address' in str(response.data)
+    limit = str(limits.parse(app.config['IP_RATE_LIMIT']))
+    assert limit in str(response.data)
 
 def test_create_rate_limit_email(set_up_client, reset_limits, clear_db):
     limit = int(app.config['CREATE_EMAIL_RATE_LIMIT'].split('/')[0])
@@ -301,6 +306,8 @@ def test_create_rate_limit_email(set_up_client, reset_limits, clear_db):
     response = create_email_alias()
     assert response.status_code == status.HTTP_429_TOO_MANY_REQUESTS
     assert 'Exceeded limit for same email address' in str(response.data)
+    limit = str(limits.parse(app.config['CREATE_EMAIL_RATE_LIMIT']))
+    assert limit in str(response.data)
 
 def test_request_delete_limit_email(set_up_client, reset_limits, clear_db):
     client = app.test_client()
@@ -329,3 +336,5 @@ def test_request_delete_limit_email(set_up_client, reset_limits, clear_db):
                            content_type='application/json')
     assert response.status_code == status.HTTP_429_TOO_MANY_REQUESTS
     assert 'Exceeded limit for same email address' in str(response.data)
+    limit = str(limits.parse(app.config['REQUEST_DELETE_RATE_LIMIT']))
+    assert limit in str(response.data)
