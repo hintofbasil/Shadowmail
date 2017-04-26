@@ -8,13 +8,11 @@ var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 var gutil = require('gulp-util');
 var del = require('del');
-var reactify = require('reactify');
 var fs = require('fs');
 var sass = require('gulp-sass');
 
 var paths = {
-  js: 'js/**/*',
-  app_js: 'js/app.jsx',
+  js: 'js/**/*.js',
   sass: 'sass/**/*.scss',
 }
 
@@ -33,7 +31,7 @@ gulp.task('javascript-dev', function() {
     entries: paths.app_js,
     debug: true
   })
-  .transform('babelify', {presets: ['es2015', 'react']})
+  .transform('babelify', {presets: ['es2015']})
   .bundle()
   .pipe(source('bundle.js'))
   .pipe(buffer())
@@ -47,7 +45,7 @@ gulp.task('javascript-prod', function() {
     entries: paths.app_js,
     debug: false
   })
-  .transform('babelify', {presets: ['es2015', 'react']})
+  .transform('babelify', {presets: ['es2015']})
   .bundle()
   .pipe(source('bundle.js'))
   .pipe(buffer())
