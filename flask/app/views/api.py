@@ -43,9 +43,14 @@ request_delete_error_message = 'Exceeded limit for same email address: {}'.forma
                  get_email_from_request,
                  error_message=create_email_error_message)
 def new():
-    if 'email' not in request.get_json(force=True):
+    data = request.get_json(force=True)
+    if 'email' not in data:
         return dict(
             status='Email missing'
+        ), status.HTTP_400_BAD_REQUEST
+    if data['email'].endswith(app.config['EMAIL_POSTFIX']):
+        return dict(
+            status='Forwarding to this domain is not allowed'
         ), status.HTTP_400_BAD_REQUEST
     dictionaryPath = app.config['BEAUTIFURL_DICTIONARIES_URI']
     beautifurl = Beautifurl(dictionaryPath=dictionaryPath)

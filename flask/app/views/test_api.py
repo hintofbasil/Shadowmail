@@ -338,3 +338,15 @@ def test_request_delete_limit_email(set_up_client, reset_limits, clear_db):
     assert 'Exceeded limit for same email address' in str(response.data)
     limit = str(limits.parse(app.config['REQUEST_DELETE_RATE_LIMIT']))
     assert limit in str(response.data)
+
+def test_new_email_cyclical(set_up_client, reset_limits):
+    client = app.test_client()
+    postfix = app.config['EMAIL_POSTFIX']
+    data = dict(
+        email='test' + postfix
+    )
+    data = json.dumps(data)
+    response = client.post('/new', data=data,
+                          content_type='application/json')
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert 'Forwarding to this domain is not allowed' in str(response.data)
