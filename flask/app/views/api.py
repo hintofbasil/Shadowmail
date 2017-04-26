@@ -16,7 +16,7 @@ import time
 
 @emailLimiter.request_filter
 def no_email_whitelist():
-    data = request.get_json(force=True)
+    data = request.get_json()
     return data is None or 'email' not in data
 
 def get_email_from_request():
