@@ -11,6 +11,7 @@ var gutil = require('gulp-util');
 var del = require('del');
 var fs = require('fs');
 var sass = require('gulp-sass');
+var glob = require('glob');
 
 var paths = {
   js: 'js/**/*.js',
@@ -29,31 +30,35 @@ gulp.task('clean', function() {
 });
 
 gulp.task('javascript-dev', function() {
-  return browserify({
-    entries: paths.app_js,
-    debug: true
-  })
-  .transform('babelify', {presets: ['es2015']})
-  .bundle()
-  .pipe(source('bundle.js'))
-  .pipe(buffer())
-  .pipe(gulp.dest('static/js'))
+  glob(paths.js, function(er, files) {
+    return browserify({
+      entries: files,
+      debug: true
+    })
+    .transform('babelify', {presets: ['es2015']})
+    .bundle()
+    .pipe(source('bundle.js'))
+    .pipe(buffer())
+    .pipe(gulp.dest('static/js'))
+  });
 });
 
 gulp.task('javascript-prod', function() {
   process.env.NODE_ENV = 'production';
 
-  return browserify({
-    entries: paths.app_js,
-    debug: false
-  })
-  .transform('babelify', {presets: ['es2015']})
-  .bundle()
-  .pipe(source('bundle.js'))
-  .pipe(buffer())
-  .pipe(uglify())
-    .on('error', gutil.log)
-  .pipe(gulp.dest('static/js'))
+  glob(paths.js, function(er, files) {
+    return browserify({
+      entries: files,
+      debug: false
+    })
+    .transform('babelify', {presets: ['es2015']})
+    .bundle()
+    .pipe(source('bundle.js'))
+    .pipe(buffer())
+    .pipe(uglify())
+      .on('error', gutil.log)
+    .pipe(gulp.dest('static/js'))
+  });
 });
 
 gulp.task('dev', ['javascript-dev', 'sass'])
