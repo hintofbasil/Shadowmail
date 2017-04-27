@@ -1,7 +1,7 @@
 .input-then-button-layout {
   margin-top: 25%;
 
-  :first-child {
+  > :first-child {
     float: right;
     padding: 0;
     width: 38px; // Height is set in Skeleton
@@ -14,7 +14,7 @@
     display: block;
     overflow: hidden;
 
-    :first-child {
+    > :first-child {
       width: 100%;
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
