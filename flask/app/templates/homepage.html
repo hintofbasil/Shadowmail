@@ -35,11 +35,19 @@
 	<div class="container">
 		<div class="row">
             <div class="offset-by-two eight columns input-then-button-layout">
-                <input type="submit" value="&#x21A9" />
-                <span class="submit-span"><input type="text" class="email-input" /></span>
+                <form method="POST" id="new-email-form">
+                    <input type="submit" value="&#x21A9" />
+                    <span class="submit-span"><input type="text" class="email-input" /></span>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="offset-by-two eight columns">
+                ERROR
             </div>
         </div>
 	</div>
 
+    <script src="static/js/bundle.js"></script>
 </body>
 </html>
