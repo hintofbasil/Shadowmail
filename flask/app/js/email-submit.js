@@ -17,7 +17,7 @@ function requestNewEmail() {
       if(body.status == 'OK') {
         newEmailSuccess.innerHTML = body.email;
       } else if (body.status == 'ERROR') {
-        newEmailError.innerHTML = 'An error occured' + body.reason;
+        newEmailError.innerHTML = 'An error occured:<br />' + body.reason;
       } else {
         newEmailError.innerHTML = 'An unexpected error occured';
       }
