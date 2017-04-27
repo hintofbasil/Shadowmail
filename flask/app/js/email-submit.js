@@ -1,6 +1,8 @@
 var request = require('request');
 
 var newEmailForm = document.getElementById('new-email-form');
+var newEmailSuccess = document.getElementById('new-email-success');
+var newEmailError = document.getElementById('new-email-error');
 
 function requestNewEmail() {
   request.post(
@@ -11,11 +13,11 @@ function requestNewEmail() {
 
     function(err, response, body) {
       if(body.status == 'OK') {
-        console.log('New email: ' + body.email);
+        newEmailSuccess.innerHTML = body.email;
       } else if (body.status == 'ERROR') {
-        console.log('An error occured' + body.reason);
+        newEmailError.innerHTML = 'An error occured' + body.reason;
       } else {
-        console.log('An unexpected error occured');
+        newEmailError.innerHTML = 'An unexpected error occured';
       }
     });
 }
