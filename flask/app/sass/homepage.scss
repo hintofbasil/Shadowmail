@@ -1,0 +1,23 @@
+.input-button-layout {
+  margin-top: 25%;
+
+  input[type=submit] {
+    float: right;
+    padding: 0;
+    width: 38px; // Height is set in Skeleton
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  input[type=text] {
+    width: 100%;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+  }
+
+  span {
+    display: block;
+    overflow: hidden;
+  }
+}
