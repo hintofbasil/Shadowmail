@@ -16,10 +16,16 @@ function requestNewEmail() {
     function(err, response, body) {
       if(body.status == 'OK') {
         newEmailSuccess.innerHTML = body.email;
+        newEmailSuccess.style.display = 'default';
+        newEmailError.style.display = 'none';
       } else if (body.status == 'ERROR') {
         newEmailError.innerHTML = 'An error occured:<br />' + body.reason;
+        newEmailError.style.display = 'default';
+        newEmailSuccess.style.display = 'none';
       } else {
         newEmailError.innerHTML = 'An unexpected error occured';
+        newEmailError.style.display = 'default';
+        newEmailSuccess.style.display = 'none';
       }
     });
 }
