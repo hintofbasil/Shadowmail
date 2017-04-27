@@ -2,6 +2,7 @@
 
 var browserify = require('browserify');
 var gulp = require('gulp');
+var concatCss = require('gulp-concat-css');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
@@ -19,6 +20,7 @@ var paths = {
 gulp.task('sass', function() {
   return gulp.src(paths.sass)
     .pipe(sass().on('error', sass.logError))
+    .pipe(concatCss('bundle.css'))
     .pipe(gulp.dest('static/css'))
 });
 
