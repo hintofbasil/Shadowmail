@@ -3,12 +3,14 @@ var request = require('request');
 var newEmailForm = document.getElementById('new-email-form');
 var newEmailSuccess = document.getElementById('new-email-success');
 var newEmailError = document.getElementById('new-email-error');
+var newEmailInput = document.getElementById('new-email-input');
 
 function requestNewEmail() {
+  var email = newEmailInput.value;
   request.post(
     {
       uri: 'http://localhost:5000/new',
-      json: {email:'test@example.com'}
+      json: {email: email}
     },
 
     function(err, response, body) {
