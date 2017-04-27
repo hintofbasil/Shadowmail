@@ -4,7 +4,7 @@
 
 ### Initialise test environment variables
 
-    export APP_SETTINGS=Development
+    export APP_SETTINGS=Testing
     export DB_PASSWORD="change_me"
     export SECRET_KEY="change_me"
     export FLASK_APP=$(pwd)/main.py
