@@ -64,6 +64,9 @@ def test_new_email_arg_missing(set_up_client, reset_limits):
     response = client.post('/new', data=data,
                           content_type='application/json')
     assert response.status_code == status.HTTP_400_BAD_REQUEST
+    jsonResponse = json.loads(response.data)
+    assert jsonResponse['status'] == 'ERROR'
+    assert jsonResponse['reason'] == 'Email missing'
 
 def test_generate_valid_email(set_up_client, reset_limits):
     response = create_email_alias()
@@ -349,4 +352,6 @@ def test_new_email_cyclical(set_up_client, reset_limits):
     response = client.post('/new', data=data,
                           content_type='application/json')
     assert response.status_code == status.HTTP_400_BAD_REQUEST
-    assert 'Forwarding to this domain is not allowed' in str(response.data)
+    jsonResponse = json.loads(response.data)
+    assert jsonResponse['status'] == 'ERROR'
+    assert jsonResponse['reason'] == 'Forwarding to this domain is not allowed'
