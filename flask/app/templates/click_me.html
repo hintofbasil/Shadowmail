@@ -35,21 +35,26 @@
 	<div class="container">
 		<div class="row">
             <div class="offset-by-two eight columns">
-                <form method="POST" id="request-delete-form">
+                <form method="POST" id="click-me-form">
                     <input type="submit" value="{{ submit_value }}" />
                 </form>
             </div>
         </div>
         <div class="row">
-            <div class="offset-by-two eight columns" id="new-email-success">
+            <div class="offset-by-two eight columns" id="click-me-success"
+                style="display: none;">
+                {{ success_message }}
             </div>
         </div>
         <div class="row">
-            <div class="offset-by-two eight columns" id="new-email-error">
+            <div class="offset-by-two eight columns" id="click-me-error">
             </div>
         </div>
 	</div>
 
+    <div id="click-me-url" style="display:none;">
+        {{ url }}
+    </div>
     <script src="static/js/bundle.js"></script>
 </body>
 </html>

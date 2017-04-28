@@ -10,5 +10,7 @@ def homepage():
 def template_request_delete():
     return render_template(
         'click_me.html',
-        submit_value='Send request'
+        submit_value='Send request',
+        url='api/request_delete',
+        success_message='Confirmation email sent'
     )
