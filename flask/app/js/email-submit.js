@@ -16,28 +16,30 @@ function requestNewEmail() {
     function(err, response, body) {
       if(body.status == 'OK') {
         newEmailSuccess.innerHTML = body.email;
-        newEmailSuccess.style.display = 'default';
+        newEmailSuccess.style.display = '';
         newEmailError.style.display = 'none';
       } else if (body.status == 'ERROR') {
         newEmailError.innerHTML = 'An error occured:<br />' + body.reason;
-        newEmailError.style.display = 'default';
+        newEmailError.style.display = '';
         newEmailSuccess.style.display = 'none';
       } else {
         newEmailError.innerHTML = 'An unexpected error occured';
-        newEmailError.style.display = 'default';
+        newEmailError.style.display = '';
         newEmailSuccess.style.display = 'none';
       }
     });
 }
 
-if (newEmailForm.addEventListener) {
-  newEmailForm.addEventListener("submit", function(evt) {
-    evt.preventDefault();
-    requestNewEmail();
-  }, true);
-} else {
-  newEmailForm.attachEvent('onsubmit', function(evt) {
-    evt.preventDefault();
-    requestNewEmail();
-  });
+if (newEmailForm != null) {
+  if (newEmailForm.addEventListener) {
+    newEmailForm.addEventListener("submit", function(evt) {
+      evt.preventDefault();
+      requestNewEmail();
+    }, true);
+  } else {
+    newEmailForm.attachEvent('onsubmit', function(evt) {
+      evt.preventDefault();
+      requestNewEmail();
+    });
+  }
 }
