@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import os
-from flask import render_template
 from flask_api import FlaskAPI
 from flask_sqlalchemy import SQLAlchemy
 from flask_limiter import Limiter
@@ -20,10 +19,7 @@ mail = Mail(app)
 
 from models.virtual_alias import *
 from views.api import *
-
-@app.route('/')
-def hello():
-    return render_template('homepage.html')
+from views.templates import *
 
 @app.cli.command()
 def initdb():
