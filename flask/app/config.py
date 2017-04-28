@@ -27,12 +27,20 @@ class Config:
     CREATE_EMAIL_RATE_LIMIT = '3/30minutes'
     REQUEST_DELETE_RATE_LIMIT = '1/30minutes'
 
-class Development(Config):
+class Testing(Config):
     CSRF_ENABLED = False
     SECRET_KEY = 'change_me'
     SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/test.db'
     BEAUTIFURL_DICTIONARIES_URI = 'test_dictionaries'
     BEAUTIFURL_FORMAT = 'w'
+
+class Development(Config):
+    CSRF_ENABLED = False
+    SECRET_KEY = 'change_me'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/test.db'
+    IP_RATE_LIMIT = '1000/30minutes'
+    CREATE_EMAIL_RATE_LIMIT = '3000/30minutes'
+    REQUEST_DELETE_RATE_LIMIT = '1000/30minutes'
 
 class Docker(Config):
     DEVELOPMENT = False

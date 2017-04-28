@@ -48,22 +48,25 @@ def create_email_alias(prefix=None):
         email=email
     )
     data = json.dumps(data)
-    response = client.post('/new', data=data,
+    response = client.post('/api/new', data=data,
                           content_type='application/json')
     return response
 
 def test_new_email_get_invalid(set_up_client, reset_limits):
     client = app.test_client()
-    response = client.get('/new')
+    response = client.get('/api/new')
     assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
 
 def test_new_email_arg_missing(set_up_client, reset_limits):
     client = app.test_client()
     data = dict()
     data = json.dumps(data)
-    response = client.post('/new', data=data,
+    response = client.post('/api/new', data=data,
                           content_type='application/json')
     assert response.status_code == status.HTTP_400_BAD_REQUEST
+    jsonResponse = json.loads(response.data)
+    assert jsonResponse['status'] == 'ERROR'
+    assert jsonResponse['reason'] == 'Email missing'
 
 def test_generate_valid_email(set_up_client, reset_limits):
     response = create_email_alias()
@@ -98,7 +101,7 @@ def test_email_all_permutations_exhuasted(set_up_client, reset_limits, clear_db)
 
 def test_delete_email_get_invalid(set_up_client, reset_limits):
     client = app.test_client()
-    response = client.get('/delete')
+    response = client.get('/api/delete')
     assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
 
 def test_delete_token_incorrect(set_up_client, reset_limits):
@@ -111,7 +114,7 @@ def test_delete_token_incorrect(set_up_client, reset_limits):
         token=m.hexdigest()
     )
     data = json.dumps(data)
-    response = client.post('/delete', data=data,
+    response = client.post('/api/delete', data=data,
                           content_type='application/json')
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert 'Invalid token' in str(response.data)
@@ -127,7 +130,7 @@ def test_delete_expired(set_up_client, reset_limits):
         token=token
     )
     data = json.dumps(data)
-    response = client.post('/delete', data=data,
+    response = client.post('/api/delete', data=data,
                           content_type='application/json')
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert 'Token expired' in str(response.data)
@@ -143,7 +146,7 @@ def test_invalid_email(set_up_client, reset_limits):
         token=token
     )
     data = json.dumps(data)
-    response = client.post('/delete', data=data,
+    response = client.post('/api/delete', data=data,
                           content_type='application/json')
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert 'Email address not found' in str(response.data)
@@ -163,7 +166,7 @@ def test_valid_delete(set_up_client, reset_limits, clear_db):
         token=token
     )
     data = json.dumps(data)
-    response = client.post('/delete', data=data,
+    response = client.post('/api/delete', data=data,
                           content_type='application/json')
     assert response.status_code == status.HTTP_200_OK
     assert 'OK' in str(response.data)
@@ -185,16 +188,16 @@ def test_double_delete(set_up_client, reset_limits, clear_db):
         token=token
     )
     data = json.dumps(data)
-    client.post('/delete', data=data,
+    client.post('/api/delete', data=data,
                 content_type='application/json')
-    response = client.post('/delete', data=data,
+    response = client.post('/api/delete', data=data,
                            content_type='application/json')
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert 'Email address not found' in str(response.data)
 
 def test_request_delete_get_invalid(set_up_client, reset_limits):
     client = app.test_client()
-    response = client.get('/request_delete')
+    response = client.get('/api/request_delete')
     assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
 
 def test_request_delete_user_doesnt_exist(set_up_client, reset_limits):
@@ -204,7 +207,7 @@ def test_request_delete_user_doesnt_exist(set_up_client, reset_limits):
         email=email,
     )
     data = json.dumps(data)
-    response = client.post('/request_delete', data=data,
+    response = client.post('/api/request_delete', data=data,
                            content_type='application/json')
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert 'Email address not found' in str(response.data)
@@ -224,7 +227,7 @@ def test_request_delete_user_disabled(set_up_client, reset_limits, clear_db):
         email=email,
     )
     data = json.dumps(data)
-    response = client.post('/request_delete', data=data,
+    response = client.post('/api/request_delete', data=data,
                            content_type='application/json')
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert 'Email address not found' in str(response.data)
@@ -241,7 +244,7 @@ def test_request_delete_email_created(set_up_client, reset_limits, clear_db):
     )
     data = json.dumps(data)
     with mail.record_messages() as outbox:
-        response = client.post('/request_delete', data=data,
+        response = client.post('/api/request_delete', data=data,
                                content_type='application/json')
         assert response.status_code == status.HTTP_200_OK
         assert 'OK' in str(response.data)
@@ -278,7 +281,7 @@ def test_request_delete_rate_limit_ip(set_up_client, reset_limits, clear_db):
             email='{0:b}@shadowmail.co.uk'.format(i),
         )
         data = json.dumps(data)
-        response = client.post('/request_delete', data=data,
+        response = client.post('/api/request_delete', data=data,
                                content_type='application/json')
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert 'Email address not found' in str(response.data)
@@ -286,7 +289,7 @@ def test_request_delete_rate_limit_ip(set_up_client, reset_limits, clear_db):
         email='{0:b}@shadowmail.co.uk'.format(i + 1),
     )
     data = json.dumps(data)
-    response = client.post('/request_delete', data=data,
+    response = client.post('/api/request_delete', data=data,
                            content_type='application/json')
     assert response.status_code == status.HTTP_429_TOO_MANY_REQUESTS
     assert 'Exceeded limit from same ip address' in str(response.data)
@@ -324,7 +327,7 @@ def test_request_delete_limit_email(set_up_client, reset_limits, clear_db):
         email=email,
     )
     data = json.dumps(data)
-    response = client.post('/request_delete', data=data,
+    response = client.post('/api/request_delete', data=data,
                            content_type='application/json')
     assert response.status_code == status.HTTP_200_OK
     #Double request
@@ -332,7 +335,7 @@ def test_request_delete_limit_email(set_up_client, reset_limits, clear_db):
         email=email,
     )
     data = json.dumps(data)
-    response = client.post('/request_delete', data=data,
+    response = client.post('/api/request_delete', data=data,
                            content_type='application/json')
     assert response.status_code == status.HTTP_429_TOO_MANY_REQUESTS
     assert 'Exceeded limit for same email address' in str(response.data)
@@ -346,7 +349,9 @@ def test_new_email_cyclical(set_up_client, reset_limits):
         email='test' + postfix
     )
     data = json.dumps(data)
-    response = client.post('/new', data=data,
+    response = client.post('/api/new', data=data,
                           content_type='application/json')
     assert response.status_code == status.HTTP_400_BAD_REQUEST
-    assert 'Forwarding to this domain is not allowed' in str(response.data)
+    jsonResponse = json.loads(response.data)
+    assert jsonResponse['status'] == 'ERROR'
+    assert jsonResponse['reason'] == 'Forwarding to this domain is not allowed'

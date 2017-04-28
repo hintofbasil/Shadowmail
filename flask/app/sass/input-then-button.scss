@@ -1,0 +1,24 @@
+.input-then-button-layout {
+  margin-top: 25%;
+
+  > :first-child {
+    float: right;
+    padding: 0;
+    width: 38px; // Height is set in Skeleton
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+
+  span {
+    display: block;
+    overflow: hidden;
+
+    > :first-child {
+      width: 100%;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right: none;
+    }
+  }
+}

@@ -2,25 +2,26 @@
 
 var browserify = require('browserify');
 var gulp = require('gulp');
+var concatCss = require('gulp-concat-css');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 var gutil = require('gulp-util');
 var del = require('del');
-var reactify = require('reactify');
 var fs = require('fs');
 var sass = require('gulp-sass');
+var glob = require('glob');
 
 var paths = {
-  js: 'js/**/*',
-  app_js: 'js/app.jsx',
+  js: 'js/**/*.js',
   sass: 'sass/**/*.scss',
 }
 
 gulp.task('sass', function() {
   return gulp.src(paths.sass)
     .pipe(sass().on('error', sass.logError))
+    .pipe(concatCss('bundle.css'))
     .pipe(gulp.dest('static/css'))
 });
 
@@ -29,31 +30,35 @@ gulp.task('clean', function() {
 });
 
 gulp.task('javascript-dev', function() {
-  return browserify({
-    entries: paths.app_js,
-    debug: true
-  })
-  .transform('babelify', {presets: ['es2015', 'react']})
-  .bundle()
-  .pipe(source('bundle.js'))
-  .pipe(buffer())
-  .pipe(gulp.dest('static/js'))
+  glob(paths.js, function(er, files) {
+    return browserify({
+      entries: files,
+      debug: true
+    })
+    .transform('babelify', {presets: ['es2015']})
+    .bundle()
+    .pipe(source('bundle.js'))
+    .pipe(buffer())
+    .pipe(gulp.dest('static/js'))
+  });
 });
 
 gulp.task('javascript-prod', function() {
   process.env.NODE_ENV = 'production';
 
-  return browserify({
-    entries: paths.app_js,
-    debug: false
-  })
-  .transform('babelify', {presets: ['es2015', 'react']})
-  .bundle()
-  .pipe(source('bundle.js'))
-  .pipe(buffer())
-  .pipe(uglify())
-    .on('error', gutil.log)
-  .pipe(gulp.dest('static/js'))
+  glob(paths.js, function(er, files) {
+    return browserify({
+      entries: files,
+      debug: false
+    })
+    .transform('babelify', {presets: ['es2015']})
+    .bundle()
+    .pipe(source('bundle.js'))
+    .pipe(buffer())
+    .pipe(uglify())
+      .on('error', gutil.log)
+    .pipe(gulp.dest('static/js'))
+  });
 });
 
 gulp.task('dev', ['javascript-dev', 'sass'])

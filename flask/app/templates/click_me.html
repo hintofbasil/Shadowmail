@@ -35,24 +35,26 @@
 	<div class="container">
 		<div class="row">
             <div class="offset-by-two eight columns">
-                <form method="POST" id="new-email-form"
-                class="input-then-button-layout">
-                    <input type="submit" value="&#x21A9" />
-                    <span class="submit-span"><input type="email"
-                        class="email-input" id="new-email-input" /></span>
+                <form method="POST" id="click-me-form">
+                    <input type="submit" value="{{ submit_value }}" />
                 </form>
             </div>
         </div>
         <div class="row">
-            <div class="offset-by-two eight columns" id="new-email-success">
+            <div class="offset-by-two eight columns" id="click-me-success"
+                style="display: none;">
+                {{ success_message }}
             </div>
         </div>
         <div class="row">
-            <div class="offset-by-two eight columns" id="new-email-error">
+            <div class="offset-by-two eight columns" id="click-me-error">
             </div>
         </div>
 	</div>
 
+    <div id="click-me-url" style="display:none;">
+        {{ url }}
+    </div>
     <script src="static/js/bundle.js"></script>
 </body>
 </html>
