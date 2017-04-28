@@ -9,7 +9,7 @@ function requestNewEmail() {
   var email = newEmailInput.value;
   request.post(
     {
-      uri: 'http://localhost:5000/new',
+      uri: 'http://localhost:5000/api/new',
       json: {email: email}
     },
 

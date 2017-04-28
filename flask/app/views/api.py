@@ -35,7 +35,7 @@ request_delete_error_message = 'Exceeded limit for same email address: {}'.forma
     limits.parse(app.config['REQUEST_DELETE_RATE_LIMIT'])
 )
 
-@app.route('/new', methods=['POST'])
+@app.route('/api/new', methods=['POST'])
 @ipLimiter.limit(app.config['IP_RATE_LIMIT'],
                  get_remote_address,
                  error_message=ip_error_message)
@@ -76,7 +76,7 @@ def new():
         status='ERROR',
     ), status.HTTP_500_INTERNAL_SERVER_ERROR
 
-@app.route('/delete', methods=['POST'])
+@app.route('/api/delete', methods=['POST'])
 def delete():
     data = request.get_json(force=True)
     if ('email' not in data
@@ -113,7 +113,7 @@ def delete():
         status='OK',
     ), status.HTTP_200_OK
 
-@app.route('/request_delete', methods=['POST'])
+@app.route('/api/request_delete', methods=['POST'])
 @ipLimiter.limit(app.config['IP_RATE_LIMIT'],
                  get_remote_address,
                  error_message=ip_error_message)
