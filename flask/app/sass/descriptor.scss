@@ -11,6 +11,10 @@
   padding-bottom: 5%;
   padding-top: 5%;
   height: 100%;
+
+  a {
+    color: $text-on-background-hyperlink;
+  }
 }
 
 .descriptor-title {
