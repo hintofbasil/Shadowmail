@@ -1,0 +1,24 @@
+{% extends 'click_me.html' %}
+
+{% block data %}
+<div class="request-delete-email">
+</div>
+<div class="warning1">
+	Warning!
+</div>
+<div class="warning2">
+	This operation is not reversible.
+</div>
+{% endblock %}
+
+{% block success_message %}
+Email has been deleted
+{% endblock %}
+
+{% block submit_value %}
+Confirm delete
+{% endblock %}
+
+{% block url %}
+api/delete
+{% endblock %}
