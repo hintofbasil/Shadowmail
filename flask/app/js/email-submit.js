@@ -1,45 +1,53 @@
-var request = require('request');
+var $ = require('jquery');
 
-var newEmailForm = document.getElementById('new-email-form');
-var newEmailSuccess = document.getElementById('new-email-success');
-var newEmailError = document.getElementById('new-email-error');
-var newEmailInput = document.getElementById('new-email-input');
+var newEmailForm = $('#new-email-form');
+var newEmailSuccess = $('#new-email-success');
+var newEmailError = $('#new-email-error');
+var newEmailInput = $('#new-email-input');
 
 function requestNewEmail() {
-  var email = newEmailInput.value;
-  request.post(
+
+  function success(response, status) {
+    if(response.status == 'OK') {
+      newEmailSuccess.html(response.email);
+      newEmailError.hide();
+      newEmailSuccess.show();
+    } else {
+      newEmailError.html('An unexpected error occured');
+      newEmailError.show();
+      newEmailSuccess.hide();
+    }
+  };
+
+  function error(jqXHR, status, error) {
+    var json = jqXHR.responseJSON
+    if (json && json.status == 'ERROR' && json.reason) {
+      newEmailError.html('An error occured:<br />' + jqXHR.responseJSON.reason);
+    } else {
+      newEmailError.html('An unexpected error occured');
+    }
+    newEmailError.show();
+    newEmailSuccess.hide();
+  };
+
+  var email = newEmailInput.val();
+  var data = JSON.stringify({email: email});
+  $.ajax(
     {
-      uri: 'http://localhost:5000/api/new',
-      json: {email: email}
-    },
+      type: 'POST',
+      url: 'http://localhost:5000/api/new',
+      data: data,
+      success: success,
+      error: error,
+      contentType: "application/json"
+    }
+  );
 
-    function(err, response, body) {
-      if(body.status == 'OK') {
-        newEmailSuccess.innerHTML = body.email;
-        newEmailSuccess.style.display = '';
-        newEmailError.style.display = 'none';
-      } else if (body.status == 'ERROR') {
-        newEmailError.innerHTML = 'An error occured:<br />' + body.reason;
-        newEmailError.style.display = '';
-        newEmailSuccess.style.display = 'none';
-      } else {
-        newEmailError.innerHTML = 'An unexpected error occured';
-        newEmailError.style.display = '';
-        newEmailSuccess.style.display = 'none';
-      }
-    });
 }
 
-if (newEmailForm != null) {
-  if (newEmailForm.addEventListener) {
-    newEmailForm.addEventListener("submit", function(evt) {
-      evt.preventDefault();
-      requestNewEmail();
-    }, true);
-  } else {
-    newEmailForm.attachEvent('onsubmit', function(evt) {
-      evt.preventDefault();
-      requestNewEmail();
-    });
-  }
-}
+$(document).ready( () => {
+  newEmailForm.on('submit', e => {
+    e.preventDefault();
+    requestNewEmail();
+  });
+});

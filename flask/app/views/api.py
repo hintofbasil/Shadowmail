@@ -74,6 +74,7 @@ def new():
             db.session.rollback()
     return dict(
         status='ERROR',
+        reason='Addresses exhausted.  Please inform an administrator.'
     ), status.HTTP_500_INTERNAL_SERVER_ERROR
 
 @app.route('/api/delete', methods=['POST'])
