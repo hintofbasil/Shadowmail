@@ -45,7 +45,7 @@ function processRequest() {
   $.ajax(
     {
       type: 'POST',
-      url: 'http://localhost:5000/api/request_delete',
+      url: clickMeUrl.html(),
       data: JSON.stringify(json),
       success: success,
       error: error,
