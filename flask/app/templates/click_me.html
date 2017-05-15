@@ -35,15 +35,22 @@
 	<div class="container">
 		<div class="row">
 			<div class="offset-by-two eight columns">
+				{% block data %}
+				{% endblock %}
+			</div>
+		</div>
+		<div class="row">
+			<div class="offset-by-two eight columns">
 				<form method="POST" id="click-me-form">
-					<input type="submit" value="{{ submit_value }}" />
+					<input type="submit" value="{% block submit_value %}{% endblock %}" />
 				</form>
 			</div>
 		</div>
 		<div class="row">
 			<div class="offset-by-two eight columns" id="click-me-success"
 				style="display: none;">
-				{{ success_message }}
+				{% block success_message %}
+				{% endblock %}
 			</div>
 		</div>
 		<div class="row">
@@ -53,7 +60,8 @@
 	</div>
 
 	<div id="click-me-url" style="display:none;">
-		{{ url }}
+		{% block url %}
+		{% endblock %}
 	</div>
 	<script src="static/js/bundle.js"></script>
 </body>
