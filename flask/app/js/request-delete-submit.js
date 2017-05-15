@@ -1,9 +1,9 @@
-var request = require('request');
+var $ = require('jquery');
 
-var clickMeForm = document.getElementById('click-me-form');
-var clickMeSuccess = document.getElementById('click-me-success');
-var clickMeError = document.getElementById('click-me-error');
-var clickMeUrl = document.getElementById('click-me-url');
+var clickMeForm = $('#click-me-form');
+var clickMeSuccess = $('#click-me-success');
+var clickMeError = $('#click-me-error');
+var clickMeUrl = $('#click-me-url');
 
 function urlArgsToJson() {
   var url = window.location.href;
@@ -18,39 +18,45 @@ function urlArgsToJson() {
 }
 
 function processRequest() {
+
+  function success(response, status) {
+    if (response.status == 'OK') {
+      clickMeSuccess.show();
+      clickMeError.hide();
+    } else {
+      clickMeSuccess.hide();
+      clickMeError.show();
+      clickMeError.html('An expected error occured')
+    }
+  };
+
+  function error(jqXHR, status, error) {
+    var json = jqXHR.responseJSON;
+    if (json && json.status == 'ERROR' && json.reason) {
+      clickMeError.html('An error occured:<br />' + json.reason);
+    } else {
+      clickMeError.html('An expected error occured')
+    }
+    clickMeSuccess.hide();
+    clickMeError.show();
+  };
+
   var json = urlArgsToJson();
-  request.post(
+  $.ajax(
     {
-      uri: 'http://localhost:5000/api/request_delete',
-      json: json
-    },
-
-    function(err, response, body) {
-      if(body.status == 'OK') {
-        clickMeSuccess.style.display = '';
-        clickMeError.style.display = 'none';
-      } else if (body.status == 'ERROR') {
-        clickMeError.innerHTML = 'An error occured:<br />' + body.reason;
-        clickMeError.style.display = '';
-        clickMeSuccess.style.display = 'none';
-      } else {
-        clickMeError.innerHTML = 'An unexpected error occured';
-        clickMeError.style.display = '';
-        clickMeSuccess.style.display = 'none';
-      }
-    });
+      type: 'POST',
+      url: 'http://localhost:5000/api/request_delete',
+      data: JSON.stringify(json),
+      success: success,
+      error: error,
+      contentType: "application/json"
+    }
+  );
 }
 
-if (clickMeForm != null) {
-  if (clickMeForm.addEventListener) {
-    clickMeForm.addEventListener("submit", function(evt) {
-      evt.preventDefault();
-      processRequest();
-    }, true);
-  } else {
-    clickMeForm.attachEvent('onsubmit', function(evt) {
-      evt.preventDefault();
-      processRequest();
-    });
-  }
-}
+$(document).ready( () => {
+  clickMeForm.on('submit', e => {
+    e.preventDefault();
+    processRequest();
+  });
+});
