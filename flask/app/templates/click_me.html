@@ -16,6 +16,7 @@
 	<!-- FONT
 	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
 	<link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+	<link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 	<!-- CSS
 	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -32,17 +33,13 @@
 
 	<!-- Primary Page Layout
 	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	{% block data %}
+	{% endblock %}
 	<div class="container">
 		<div class="row">
 			<div class="offset-by-two eight columns">
-				{% block data %}
-				{% endblock %}
-			</div>
-		</div>
-		<div class="row">
-			<div class="offset-by-two eight columns">
 				<form method="POST" id="click-me-form">
-					<input type="submit" value="{% block submit_value %}{% endblock %}" />
+					<input type="submit" id="click-me-button" value="{% block submit_value %}{% endblock %}" />
 				</form>
 			</div>
 		</div>
@@ -55,6 +52,9 @@
 		</div>
 		<div class="row">
 			<div class="offset-by-two eight columns" id="click-me-error">
+				<i class="material-icons descriptor-icon">error</i><br />
+				<div id="click-me-error-text">
+				</div>
 			</div>
 		</div>
 	</div>

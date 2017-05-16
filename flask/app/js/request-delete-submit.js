@@ -3,6 +3,7 @@ var $ = require('jquery');
 var clickMeForm = $('#click-me-form');
 var clickMeSuccess = $('#click-me-success');
 var clickMeError = $('#click-me-error');
+var clickMeErrorText = $('#click-me-error-text');
 var clickMeUrl = $('#click-me-url');
 
 function urlArgsToJson() {
@@ -26,16 +27,16 @@ function processRequest() {
     } else {
       clickMeSuccess.hide();
       clickMeError.show();
-      clickMeError.html('An expected error occured')
+      clickMeErrorText.html('An expected error occured')
     }
   };
 
   function error(jqXHR, status, error) {
     var json = jqXHR.responseJSON;
     if (json && json.status == 'ERROR' && json.reason) {
-      clickMeError.html('An error occured:<br />' + json.reason);
+      clickMeErrorText.html(json.reason);
     } else {
-      clickMeError.html('An expected error occured')
+      clickMeErrorText.html('An expected error occured')
     }
     clickMeSuccess.hide();
     clickMeError.show();
