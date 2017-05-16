@@ -68,6 +68,19 @@ def test_new_email_arg_missing(set_up_client, reset_limits):
     assert jsonResponse['status'] == 'ERROR'
     assert jsonResponse['reason'] == 'Email missing'
 
+def test_new_email_format(set_up_client, reset_limits):
+    client = app.test_client()
+    data = dict(
+        email='invalid'
+    )
+    data = json.dumps(data)
+    response = client.post('/api/new', data=data,
+                          content_type='application/json')
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    jsonResponse = json.loads(response.data)
+    assert jsonResponse['status'] == 'ERROR'
+    assert jsonResponse['reason'] == 'Invalid email address'
+
 def test_generate_valid_email(set_up_client, reset_limits):
     response = create_email_alias()
     assert response.status_code == status.HTTP_201_CREATED
