@@ -3,6 +3,7 @@ var cookies = require('js-cookie');
 
 var newEmailForm = $('#new-email-form');
 var newEmailSuccess = $('#new-email-success');
+var newEmailSuccessText = $('#new-email-success-text');
 var newEmailError = $('#new-email-error');
 var newEmailErrorText = $('#new-email-error-text');
 var newEmailInput = $('#new-email-input');
@@ -11,7 +12,7 @@ function requestNewEmail() {
 
   function success(response, status) {
     if(response.status == 'OK') {
-      newEmailSuccess.html(response.email);
+      newEmailSuccessText.val(response.email);
       newEmailError.hide();
       newEmailSuccess.show();
 

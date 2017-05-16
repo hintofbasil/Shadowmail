@@ -1,0 +1,15 @@
+@import 'colors';
+
+.new-email-success-response {
+  text-align: center;
+  color: $success-text-color;
+}
+
+.submit-material-icon {
+  font-size: 20px;
+  line-height: 38px;
+}
+
+#new-email-success {
+  display: none;
+}
