@@ -4,6 +4,7 @@ var cookies = require('js-cookie');
 var newEmailForm = $('#new-email-form');
 var newEmailSuccess = $('#new-email-success');
 var newEmailError = $('#new-email-error');
+var newEmailErrorText = $('#new-email-error-text');
 var newEmailInput = $('#new-email-input');
 
 function requestNewEmail() {
@@ -18,7 +19,7 @@ function requestNewEmail() {
       cookies.set('previous-email', newEmailInput.val());
       newEmailInput.val('');
     } else {
-      newEmailError.html('An unexpected error occured');
+      newEmailErrorText.html('An unexpected error occured');
       newEmailError.show();
       newEmailSuccess.hide();
     }
@@ -27,9 +28,9 @@ function requestNewEmail() {
   function error(jqXHR, status, error) {
     var json = jqXHR.responseJSON
     if (json && json.status == 'ERROR' && json.reason) {
-      newEmailError.html('An error occured:<br />' + json.reason);
+      newEmailErrorText.html(json.reason);
     } else {
-      newEmailError.html('An unexpected error occured');
+      newEmailErrorText.html('An unexpected error occured');
     }
     newEmailError.show();
     newEmailSuccess.hide();
