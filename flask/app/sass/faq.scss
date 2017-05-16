@@ -1,6 +1,14 @@
+@import 'colors';
+
 .faq-container {
   margin-top: 5%;
   margin-bottom: 5%;
+
+  a {
+    color: $faq-hyperlink-color;
+    text-decoration: none;
+    font-weight: bold;
+  }
 }
 
 .faq-title {
