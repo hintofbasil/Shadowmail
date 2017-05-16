@@ -8,8 +8,8 @@ $(document).ready( () => {
     var question = $(questions[i]);
     answer.hide();
     question.click( e => {
+      $(e.currentTarget.nextElementSibling).toggle();
       e.preventDefault();
-      answer.toggle();
     });
   }
 });
