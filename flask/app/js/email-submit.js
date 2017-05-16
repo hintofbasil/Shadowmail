@@ -42,7 +42,7 @@ function requestNewEmail() {
   $.ajax(
     {
       type: 'POST',
-      url: 'http://localhost:5000/api/new',
+      url: '/api/new',
       data: data,
       success: success,
       error: error,
