@@ -1,4 +1,5 @@
 var $ = require('jquery');
+var cookies = require('js-cookie');
 
 var newEmailForm = $('#new-email-form');
 var newEmailSuccess = $('#new-email-success');
@@ -12,6 +13,10 @@ function requestNewEmail() {
       newEmailSuccess.html(response.email);
       newEmailError.hide();
       newEmailSuccess.show();
+
+      // Set cookie and clear input
+      cookies.set('previous-email', newEmailInput.val());
+      newEmailInput.val('');
     } else {
       newEmailError.html('An unexpected error occured');
       newEmailError.show();
@@ -50,4 +55,8 @@ $(document).ready( () => {
     e.preventDefault();
     requestNewEmail();
   });
+  var emailCookie = cookies.get('previous-email');
+  if (emailCookie) {
+    newEmailInput.val(emailCookie);
+  }
 });
