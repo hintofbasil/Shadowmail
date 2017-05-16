@@ -35,17 +35,6 @@
   margin-bottom: 0;
 }
 
-#click-me-success {
-  text-align: center;
-  color: $success-text-color;
-}
-
-#click-me-error {
-  text-align: center;
-  color: $error-text-color;
-  display: none;
-}
-
 @media (min-width: 550px) {
   .request-delete-email {
     font-size: 2em;
@@ -68,13 +57,5 @@
 
   #click-me-button {
     font-size: 1em;
-  }
-
-  #click-me-success {
-    font-size: 2em;
-  }
-
-  #click-me-error {
-    font-size: 2em;
   }
 }
