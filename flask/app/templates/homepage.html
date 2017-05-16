@@ -33,178 +33,184 @@
 
 	<!-- Primary Page Layout
 	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
-	<div class="container">
-		<div class="row">
-			<div class="offset-by-two eight columns title">
-				<img src="static/images/logo.png" alt="ShadowMail" class="logo-image" />
-			</div>
-		</div>
-		<div class="row">
-			<div class="offset-by-two eight columns">
-				<form method="POST" id="new-email-form"
-				class="input-then-button-layout">
-					<input type="submit" value="&#x21A9" />
-					<span class="submit-span"><input type="email"
-						class="email-input" id="new-email-input"
-						placeholder="you@domain.com" /></span>
-				</form>
-			</div>
-		</div>
-		<div class="row">
-			<div class="offset-by-two eight columns"
-				id="new-email-success">
-				<div class="new-email-success-response">
-					<i class="material-icons descriptor-icon">mail_outline</i><br />
-				</div>
-				<div class="input-then-button-layout">
-					<button type="submit" value="content_copy"
-						title="Copy to clipboard" id="email-copy-button">
-						<i class="material-icons descriptor-icon
-							submit-material-icon">content_copy</i><br />
-					</button>
-					<span class="submit-span"><input type="email"
-						id="new-email-success-text" /></span>
-					<div id="copy-status">
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="offset-by-two eight columns error-response-small" id="new-email-error">
-				<i class="material-icons descriptor-icon">error</i><br />
-				<div id="new-email-error-text">
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="background">
+	<div class="body">
 		<div class="container">
-			<div class="row descriptor-container">
-				<div class="four columns descriptor descriptor-one">
-					<div class="descriptor-title">Simple</div>
-					<div>
-						<i class="material-icons descriptor-icon">done</i>
+			<div class="row">
+				<div class="offset-by-two eight columns title">
+					<img src="static/images/logo.png" alt="ShadowMail" class="logo-image" />
+				</div>
+			</div>
+			<div class="row">
+				<div class="offset-by-two eight columns">
+					<form method="POST" id="new-email-form"
+					class="input-then-button-layout">
+						<input type="submit" value="&#x21A9" />
+						<span class="submit-span"><input type="email"
+							class="email-input" id="new-email-input"
+							placeholder="you@domain.com" /></span>
+					</form>
+				</div>
+			</div>
+			<div class="row">
+				<div class="offset-by-two eight columns"
+					id="new-email-success">
+					<div class="new-email-success-response">
+						<i class="material-icons descriptor-icon">mail_outline</i><br />
 					</div>
-					<div class="descriptor-text">
-						ShadowMail is simple to use.  Simply enter your email address and start using your private, virtual email address immediately.
+					<div class="input-then-button-layout">
+						<button type="submit" value="content_copy"
+							title="Copy to clipboard" id="email-copy-button">
+							<i class="material-icons descriptor-icon
+								submit-material-icon">content_copy</i><br />
+						</button>
+						<span class="submit-span"><input type="email"
+							id="new-email-success-text" /></span>
+						<div id="copy-status">
+						</div>
 					</div>
 				</div>
-				<div class="four columns descriptor descriptor-two">
-					<div class="descriptor-title">Secure</div>
-					<div>
-						<i class="material-icons descriptor-icon">lock</i>
-					</div>
-					<div class="descriptor-text">
-						ShadowMails is 100% <a href="https://github.com/hintofbasil/ShadowMail" target="_blank">open source</a>.  You can audit our code yourself to ensure you're comfortable with our practises.
+			</div>
+			<div class="row">
+				<div class="offset-by-two eight columns error-response-small" id="new-email-error">
+					<i class="material-icons descriptor-icon">error</i><br />
+					<div id="new-email-error-text">
 					</div>
 				</div>
-				<div class="four columns descriptor descriptor-three">
-					<div class="descriptor-title">Private</div>
-					<div>
-						<i class="material-icons descriptor-icon">fingerprint</i>
+			</div>
+		</div>
+		<div class="background">
+			<div class="container">
+				<div class="row descriptor-container">
+					<div class="four columns descriptor descriptor-one">
+						<div class="descriptor-title">Simple</div>
+						<div>
+							<i class="material-icons descriptor-icon">done</i>
+						</div>
+						<div class="descriptor-text">
+							ShadowMail is simple to use.  Simply enter your email address and start using your private, virtual email address immediately.
+						</div>
 					</div>
-					<div class="descriptor-text">
-						Avoid tracking by using a unique email address for each website.
+					<div class="four columns descriptor descriptor-two">
+						<div class="descriptor-title">Secure</div>
+						<div>
+							<i class="material-icons descriptor-icon">lock</i>
+						</div>
+						<div class="descriptor-text">
+							ShadowMails is 100% <a href="https://github.com/hintofbasil/ShadowMail" target="_blank">open source</a>.  You can audit our code yourself to ensure you're comfortable with our practises.
+						</div>
 					</div>
+					<div class="four columns descriptor descriptor-three">
+						<div class="descriptor-title">Private</div>
+						<div>
+							<i class="material-icons descriptor-icon">fingerprint</i>
+						</div>
+						<div class="descriptor-text">
+							Avoid tracking by using a unique email address for each website.
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row faq-container">
+				<div class="offset-by-two eight columns faq-title">
+					Frequently Asked Questions
+				</div>
+			</div>
+
+			<div class="row faq-container">
+				<div class="offset-by-two eight columns faq-question">
+					<a href="#">
+						<i class="material-icons faq-arrow">play_arrow</i>
+						<span>What is ShadowMail?</span>
+					</a>
+				</div>
+				<div class="offset-by-two eight columns faq-answer">
+					ShadowMail is a private email forwarding service.  Any email
+					sent to a ShadowMail address will be forwarded on to your
+					personal email address.
+				</div>
+			</div>
+
+			<div class="row faq-container">
+				<div class="offset-by-two eight columns faq-question">
+					<a href="#">
+						<i class="material-icons faq-arrow">play_arrow</i>
+						<span>Why did you create this service?</span>
+					</a>
+				</div>
+				<div class="offset-by-two eight columns faq-answer">
+					Have you ever given your email address to a website only to
+					start recieving spam?  ShadowMail is my solution, by giving
+					each website a different email address you can see which
+					website has sold or lost your details.  You may then delete
+					that single email address avoiding all spam while keeping
+					your email account intact.
+				</div>
+			</div>
+
+			<div class="row faq-container">
+				<div class="offset-by-two eight columns faq-question">
+					<a href="#">
+						<i class="material-icons faq-arrow">play_arrow</i>
+						<span>Does this service cost money?</span>
+					</a>
+				</div>
+				<div class="offset-by-two eight columns faq-answer">
+					No. This is a service created for personal use instead of
+					financial gain.  I have simply decided to open it up to the
+					world.
+				</div>
+			</div>
+
+			<div class="row faq-container">
+				<div class="offset-by-two eight columns faq-question">
+					<a href="#">
+						<i class="material-icons faq-arrow">play_arrow</i>
+						<span>Do you read or record emails?</span>
+					</a>
+				</div>
+				<div class="offset-by-two eight columns faq-answer">
+					No.  I strongly believe in privacy.  Your emails are not saved,
+					read, or otherwise processed.  The only thing I do is append a
+					delete link to the end.  All of our code is open source and I
+					encourage users to check our methodologies.
+				</div>
+			</div>
+
+			<div class="row faq-container">
+				<div class="offset-by-two eight columns faq-question">
+					<a href="#">
+						<i class="material-icons faq-arrow">play_arrow</i>
+						<span>Are there any limits in place?</span>
+					</a>
+				</div>
+				<div class="offset-by-two eight columns faq-answer">
+					Yes, currently you may only create 3 emails addresses per hour.
+					This is limited by both receiveing address and IP address. I
+					will explore removing or increasing these limits in the future.
+				</div>
+			</div>
+
+			<div class="row faq-container">
+				<div class="offset-by-two eight columns faq-question">
+					<a href="#">
+						<i class="material-icons faq-arrow">play_arrow</i>
+						<span>Do you accept donations?</span>
+					</a>
+				</div>
+				<div class="offset-by-two eight columns faq-answer">
+					Currently no.  This is something I may consider in the future
+					depending on the popularity of the service.  Either way I
+					intend for this service to remain free for everyone to use.
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="container">
-		<div class="row faq-container">
-			<div class="offset-by-two eight columns faq-title">
-				Frequently Asked Questions
-			</div>
-		</div>
-
-		<div class="row faq-container">
-			<div class="offset-by-two eight columns faq-question">
-				<a href="#">
-					<i class="material-icons faq-arrow">play_arrow</i>
-					<span>What is ShadowMail?</span>
-				</a>
-			</div>
-			<div class="offset-by-two eight columns faq-answer">
-				ShadowMail is a private email forwarding service.  Any email
-				sent to a ShadowMail address will be forwarded on to your
-				personal email address.
-			</div>
-		</div>
-
-		<div class="row faq-container">
-			<div class="offset-by-two eight columns faq-question">
-				<a href="#">
-					<i class="material-icons faq-arrow">play_arrow</i>
-					<span>Why did you create this service?</span>
-				</a>
-			</div>
-			<div class="offset-by-two eight columns faq-answer">
-				Have you ever given your email address to a website only to
-				start recieving spam?  ShadowMail is my solution, by giving
-				each website a different email address you can see which
-				website has sold or lost your details.  You may then delete
-				that single email address avoiding all spam while keeping
-				your email account intact.
-			</div>
-		</div>
-
-		<div class="row faq-container">
-			<div class="offset-by-two eight columns faq-question">
-				<a href="#">
-					<i class="material-icons faq-arrow">play_arrow</i>
-					<span>Does this service cost money?</span>
-				</a>
-			</div>
-			<div class="offset-by-two eight columns faq-answer">
-				No. This is a service created for personal use instead of
-				financial gain.  I have simply decided to open it up to the
-				world.
-			</div>
-		</div>
-
-		<div class="row faq-container">
-			<div class="offset-by-two eight columns faq-question">
-				<a href="#">
-					<i class="material-icons faq-arrow">play_arrow</i>
-					<span>Do you read or record emails?</span>
-				</a>
-			</div>
-			<div class="offset-by-two eight columns faq-answer">
-				No.  I strongly believe in privacy.  Your emails are not saved,
-				read, or otherwise processed.  The only thing I do is append a
-				delete link to the end.  All of our code is open source and I
-				encourage users to check our methodologies.
-			</div>
-		</div>
-
-		<div class="row faq-container">
-			<div class="offset-by-two eight columns faq-question">
-				<a href="#">
-					<i class="material-icons faq-arrow">play_arrow</i>
-					<span>Are there any limits in place?</span>
-				</a>
-			</div>
-			<div class="offset-by-two eight columns faq-answer">
-				Yes, currently you may only create 3 emails addresses per hour.
-				This is limited by both receiveing address and IP address. I
-				will explore removing or increasing these limits in the future.
-			</div>
-		</div>
-
-		<div class="row faq-container">
-			<div class="offset-by-two eight columns faq-question">
-				<a href="#">
-					<i class="material-icons faq-arrow">play_arrow</i>
-					<span>Do you accept donations?</span>
-				</a>
-			</div>
-			<div class="offset-by-two eight columns faq-answer">
-				Currently no.  This is something I may consider in the future
-				depending on the popularity of the service.  Either way I
-				intend for this service to remain free for everyone to use.
-			</div>
-		</div>
+	<div class="footer">
+		&#xa9; ShadowMail.co.uk 2017
 	</div>
 
 	<script src="static/js/bundle.js"></script>

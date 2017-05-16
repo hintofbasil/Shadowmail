@@ -33,30 +33,36 @@
 
 	<!-- Primary Page Layout
 	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
-	{% block data %}
-	{% endblock %}
-	<div class="container">
-		<div class="row">
-			<div class="offset-by-two eight columns">
-				<form method="POST" id="click-me-form">
-					<input type="submit" id="click-me-button" value="{% block submit_value %}{% endblock %}" />
-				</form>
+	<div class="body">
+		{% block data %}
+		{% endblock %}
+		<div class="container">
+			<div class="row">
+				<div class="offset-by-two eight columns">
+					<form method="POST" id="click-me-form">
+						<input type="submit" id="click-me-button" value="{% block submit_value %}{% endblock %}" />
+					</form>
+				</div>
 			</div>
-		</div>
-		<div class="row">
-			<div class="offset-by-two eight columns success-response" id="click-me-success"
-				style="display: none;">
-				{% block success_message %}
-				{% endblock %}
+			<div class="row">
+				<div class="offset-by-two eight columns success-response" id="click-me-success"
+					style="display: none;">
+					{% block success_message %}
+					{% endblock %}
+				</div>
 			</div>
-		</div>
-		<div class="row">
-			<div class="offset-by-two eight columns error-response" id="click-me-error">
-				<i class="material-icons descriptor-icon">error</i><br />
-				<div id="click-me-error-text">
+			<div class="row">
+				<div class="offset-by-two eight columns error-response" id="click-me-error">
+					<i class="material-icons descriptor-icon">error</i><br />
+					<div id="click-me-error-text">
+					</div>
 				</div>
 			</div>
 		</div>
+	</div>
+
+	<div class="footer">
+		&#xa9; ShadowMail.co.uk 2017
 	</div>
 
 	<div id="click-me-url" style="display:none;">
