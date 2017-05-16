@@ -12,7 +12,10 @@ import limits
 import hashlib
 import math
 import random
+import re
 import time
+
+EMAIL_REGEX = '.+@.+'
 
 @emailLimiter.request_filter
 def no_email_whitelist():
@@ -53,6 +56,12 @@ def new():
         return dict(
             status='ERROR',
             reason='Forwarding to this domain is not allowed'
+        ), status.HTTP_400_BAD_REQUEST
+    match = re.match(EMAIL_REGEX, data['email'])
+    if not match:
+        return dict(
+            status='ERROR',
+            reason='Invalid email address'
         ), status.HTTP_400_BAD_REQUEST
     dictionaryPath = app.config['BEAUTIFURL_DICTIONARIES_URI']
     beautifurl = Beautifurl(dictionaryPath=dictionaryPath)
