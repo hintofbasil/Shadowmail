@@ -176,6 +176,6 @@ def generate_delete_link(email):
     token = generate_token(email, timestamp=timestamp)
     link = 'https://shadowmail.co.uk/delete?'
     link += 'email=' + email
-    link += '&time=' + timestamp
+    link += '&timestamp=' + timestamp
     link += '&token=' + token
     return link
