@@ -4,3 +4,8 @@ echo "hosts = $DB_HOSTS" >> /etc/postfix/mysql-aliases.cf
 
 echo "mail.$MAILNAME	OK" >> /etc/postfix/virtual_mailbox_domains
 postmap /etc/postfix/virtual_mailbox_domains
+
+useradd -r -d /var/spool/filter filter
+mkdir /var/spool/filter
+chown filter:filter /var/spool/filter
+chmod 750 /var/spool/filter

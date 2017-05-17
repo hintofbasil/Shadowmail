@@ -10,7 +10,7 @@
 #               (yes)   (yes)   (no)    (never) (100)
 # ==========================================================================
 smtp      inet  n       -       y       -       -       smtpd
-#	-o content_filter=footer
+	-o content_filter=footer
 #smtp      inet  n       -       y       -       1       postscreen
 #smtpd     pass  -       -       y       -       -       smtpd
 #dnsblog   unix  -       -       y       -       0       dnsblog
@@ -123,5 +123,5 @@ mailman   unix  -       n       n       -       -       pipe
   flags=FR user=list argv=/usr/lib/mailman/bin/postfix-to-mailman.py
   ${nexthop} ${user}
 
-#footer	unix	-	n	n	-	10	pipe
-#	flags=Rq user=filter argv=/etc/postfix/add-footer -f ${sender} -- ${original_recipient}
+footer	unix	-	n	n	-	10	pipe
+	flags=Rq user=filter argv=/etc/postfix/add-footer -f ${sender} -- ${original_recipient}
