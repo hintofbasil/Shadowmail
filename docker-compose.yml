@@ -47,4 +47,5 @@ services:
       - db
     volumes:
       - /var/log/nginx:/var/log/nginx
+      - /var/log/uwsgi:/var/log/uwsgi
       - ${SSL_LOCATION}:/ssl:ro
