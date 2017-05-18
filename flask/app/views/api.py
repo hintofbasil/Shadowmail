@@ -103,7 +103,7 @@ def delete():
             status='ERROR',
             reason='Invalid token'
         ), status.HTTP_400_BAD_REQUEST
-    if data['timestamp'] + app.config['DELETE_TOKEN_EXPIRY'] < time.time():
+    if int(data['timestamp']) + app.config['DELETE_TOKEN_EXPIRY'] < time.time():
         return dict(
             status='ERROR',
             reason='Token expired'
