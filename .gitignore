@@ -93,3 +93,4 @@ ENV/
 shadowmail-postfix-docker/env.list
 flask/app/node_modules/
 flask/app/static/
+package-lock.json
