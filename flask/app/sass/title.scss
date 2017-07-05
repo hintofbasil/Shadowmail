@@ -1,7 +1,22 @@
+@import 'colors';
+
 .title {
   margin-top: 15%;
   text-align: center;
+}
+
+.sub-title {
   margin-bottom: 10%;
+  text-align: center;
+  color: $subtitle-text-color;
+  font-weight: bold;
+  font-size: 5vw;
+}
+
+@media (min-width: 550px) {
+  .sub-title {
+    font-size: 3vw;
+  }
 }
 
 .logo-image {
