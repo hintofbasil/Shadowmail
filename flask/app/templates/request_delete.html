@@ -2,7 +2,16 @@
 
 {% block data %}
 <div class="request-delete-email">
+    {% if url_args.email %}
+        {{ url_args.email }}
+    {% else %}
+        No email specified
+    {% endif %}
 </div>
+{% endblock %}
+
+{% block form %}
+<input type="hidden" name="email" value="{{ url_args.email }}" />
 {% endblock %}
 
 {% block success_message %}
@@ -10,10 +19,6 @@
 Confirmation email sent
 {% endblock %}
 
-{% block submit_value %}
-Send request
-{% endblock %}
+{% block submit_value %}Send request{% endblock %}
 
-{% block url %}
-api/request_delete
-{% endblock %}
+{% block url %}api/request_delete{% endblock %}

@@ -40,6 +40,7 @@
 			<div class="row">
 				<div class="offset-by-two eight columns">
 					<form method="POST" id="click-me-form">
+						{% block form %}{% endblock %}
 						<input type="submit" id="click-me-button" value="{% block submit_value %}{% endblock %}" />
 					</form>
 				</div>
