@@ -11,6 +11,14 @@ Generate Flask secret key
 
     export FLASK_SECRET_KEY=$(pwgen -Bs1 48)
 
-Lanuch docker containers
+Set Postfix domain name
+
+    export MAILNAME=shadowmail.co.uk
+
+Set SSL certificate location
+
+    export SSL_LOCATION=/path/to/certificates
+
+Launch docker containers
 
     docker-compose up -d
