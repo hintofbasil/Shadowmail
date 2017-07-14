@@ -10,6 +10,10 @@
 </div>
 {% endblock %}
 
+{% block form %}
+<input type="hidden" name="email" value="{{ url_args.email }}" />
+{% endblock %}
+
 {% block success_message %}
 <i class="material-icons descriptor-icon">mail_outline</i><br />
 Confirmation email sent

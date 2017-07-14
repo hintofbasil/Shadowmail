@@ -16,5 +16,6 @@ def template_request_delete():
 @app.route('/delete')
 def template_delete():
     return render_template(
-        'confirm_delete.html'
+        'confirm_delete.html',
+        url_args=request.args
     )

@@ -11,6 +11,12 @@
 </div>
 {% endblock %}
 
+{% block form %}
+<input type="hidden" name="email" value="{{ url_args.email }}" />
+<input type="hidden" name="timestamp" value="{{ url_args.timestamp }}" />
+<input type="hidden" name="token" value="{{ url_args.token }}" />
+{% endblock %}
+
 {% block success_message %}
 Email has been deleted
 {% endblock %}
