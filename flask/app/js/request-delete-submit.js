@@ -6,19 +6,18 @@ var clickMeError = $('#click-me-error');
 var clickMeErrorText = $('#click-me-error-text');
 var clickMeUrl = $('#click-me-url');
 
-function urlArgsToJson() {
-  var url = window.location.href;
-  var remove = url.split('?', 1)[0];
-  var args = url.substring(remove.length + 1);
-  var response = {};
-  args.split('&').forEach(function(s) {
-    var a = s.split('=');
-    response[a[0]] = a[1];
-  });
-  return response;
-}
-
 function processRequest() {
+
+  function getFormData() {
+    var data = {}
+    $.each(clickMeForm[0].elements, function(i, v) {
+      var input = $(v);
+      data[input.attr('name')] = input.val();
+    });
+    // Delete submmit button
+    delete data['undefined'];
+    return data;
+  }
 
   function success(response, status) {
     if (response.status == 'OK') {
@@ -42,7 +41,7 @@ function processRequest() {
     clickMeError.show();
   };
 
-  var json = urlArgsToJson();
+  var json = getFormData();
   $.ajax(
     {
       type: 'POST',
