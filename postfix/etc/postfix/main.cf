@@ -7,6 +7,7 @@
 myorigin = /etc/mailname
 
 biff = no
+disable_vrfy_command = yes
 
 # SMTPD settings
 smtpd_banner = $myhostname ESMTP
