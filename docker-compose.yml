@@ -49,3 +49,10 @@ services:
       - /var/log/nginx:/var/log/nginx
       - /var/log/uwsgi:/var/log/uwsgi
       - ${SSL_LOCATION}:/ssl:ro
+
+  aws-backup:
+    build: ./aws-backup
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION}
