@@ -19,6 +19,12 @@ Set SSL certificate location
 
     export SSL_LOCATION=/path/to/certificates
 
+Set Amazon S3 credentials
+
+      export AWS_ACCESS_KEY_ID="AWS_ACCESS_KEY_ID"
+      export AWS_SECRET_ACCESS_KEY="AWS_SECRET_ACCESS_KEY"
+      export AWS_REGION="AWS_REGION"
+
 Launch docker containers
 
     docker-compose up -d
