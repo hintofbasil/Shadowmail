@@ -6,7 +6,7 @@ ENV AWS_REGION ""
 ENV AWS_BUCKET_NAME ""
 ENV DB_PASSWORD ""
 
-RUN apk update && apk add mysql-client
+RUN apk --no-cache add mysql-client openssl
 
 COPY entrypoint.sh /entrypoint.sh
 COPY backup.sh /backup.sh
