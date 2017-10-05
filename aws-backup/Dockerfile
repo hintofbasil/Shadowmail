@@ -11,4 +11,7 @@ RUN apk update && apk add mysql-client
 COPY entrypoint.sh /entrypoint.sh
 COPY backup.sh /backup.sh
 
+RUN (crontab -u $(whoami) -l; echo "0 1 * * * /backup.sh") \
+	| crontab -u $(whoami) -
+
 CMD /entrypoint.sh
