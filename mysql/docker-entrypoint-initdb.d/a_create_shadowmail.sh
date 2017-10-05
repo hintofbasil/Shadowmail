@@ -8,6 +8,7 @@ GRANT INSERT ON shadowmail.virtual_alias TO 'flask'@'172.18.%.%';
 GRANT UPDATE ON shadowmail.virtual_alias TO 'flask'@'172.18.%.%';
 GRANT SELECT ON shadowmail.virtual_alias TO 'postfix'@'172.18.%.%';
 GRANT SELECT ON shadowmail.* TO 'backup'@'172.18.%.%';
+GRANT LOCK TABLES on shadowmail.* TO 'backup'@'172.18.%.%';
 
 FLUSH PRIVILEGES;
 EOF
