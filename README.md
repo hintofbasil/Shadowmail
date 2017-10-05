@@ -6,6 +6,7 @@ Generate random passwords for flask and postfix
 
     export FLASK_DB_PASSWORD=$(pwgen -Bs1 24)
     export POSTFIX_DB_PASSWORD=$(pwgen -Bs1 24)
+    export BACKUP_DB_PASSWORD=$(pwgen -Bs1 24)
 
 Generate Flask secret key
 
