@@ -25,6 +25,7 @@ Set Amazon S3 credentials
       export AWS_ACCESS_KEY_ID="AWS_ACCESS_KEY_ID"
       export AWS_SECRET_ACCESS_KEY="AWS_SECRET_ACCESS_KEY"
       export AWS_REGION="AWS_REGION"
+      export AWS_BUCKET_NAME="AWS_BUCKET_NAME"
 
 Launch docker containers
 

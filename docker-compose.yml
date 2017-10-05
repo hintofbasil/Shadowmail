@@ -57,6 +57,8 @@ services:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_REGION: ${AWS_REGION}
+      AWS_BUCKET_NAME: ${AWS_BUCKET_NAME}
+      DB_NAME: 'shadowmail'
       DB_PASSWORD: ${BACKUP_DB_PASSWORD}
     depends_on:
       - db
