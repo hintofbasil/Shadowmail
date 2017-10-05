@@ -22,10 +22,16 @@ Set SSL certificate location
 
 Set Amazon S3 credentials
 
-      export AWS_ACCESS_KEY_ID="AWS_ACCESS_KEY_ID"
-      export AWS_SECRET_ACCESS_KEY="AWS_SECRET_ACCESS_KEY"
-      export AWS_REGION="AWS_REGION"
-      export AWS_BUCKET_NAME="AWS_BUCKET_NAME"
+    export AWS_ACCESS_KEY_ID="AWS_ACCESS_KEY_ID"
+    export AWS_SECRET_ACCESS_KEY="AWS_SECRET_ACCESS_KEY"
+    export AWS_REGION="AWS_REGION"
+    export AWS_BUCKET_NAME="AWS_BUCKET_NAME"
+
+Set OPENSSL Encryption public key folder.
+
+    export OPENSSL_PUBLIC_KEY_LOCATION=/path/to/key
+
+This folder must contain a file called public.pem
 
 Launch docker containers
 

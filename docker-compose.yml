@@ -62,3 +62,5 @@ services:
       DB_PASSWORD: ${BACKUP_DB_PASSWORD}
     depends_on:
       - db
+    volumes:
+      - ${OPENSSL_PUBLIC_KEY_LOCATION}:/openssl
