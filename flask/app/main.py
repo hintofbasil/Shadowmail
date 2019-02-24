@@ -12,8 +12,8 @@ app.config.from_object('config.' + os.environ['APP_SETTINGS'])
 
 db = SQLAlchemy(app)
 
-emailLimiter = Limiter(app)
-ipLimiter = Limiter(app)
+email_limiter = Limiter(app)
+ip_limiter = Limiter(app)
 
 mail = Mail(app)
 
@@ -27,10 +27,17 @@ def initdb():
 
 @app.cli.command()
 def test():
+    base = os.path.dirname(os.path.abspath(__file__))
+    env_path = os.path.join(base, 'env')
+    node_modules_path = os.path.join(base, 'node_modules')
     import pytest
-    rv = pytest.main(['/home/will/Workspace/shadowmail/flask/app',
-                      '--ignore=env', '--ignore=node_modules', '--verbose'])
-    exit(rv)
+    exit_code = pytest.main([
+                             base,
+                             '--ignore=' + env_path,
+                             '--ignore=' + node_modules_path,
+                             '--verbose'
+                           ])
+    exit(exit_code)
 
-if __name__=='__main__':
+if __name__ == '__main__':
     app.run()

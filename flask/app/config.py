@@ -1,7 +1,10 @@
 import os
 
+base = os.path.dirname(os.path.abspath(__file__))
+
 def load_email(email):
-    with open('emails/' + email, 'r') as f:
+    path = os.path.join(base, 'emails', email)
+    with open(path, 'r') as f:
         return f.read()
 
 class Config:
@@ -31,7 +34,7 @@ class Testing(Config):
     CSRF_ENABLED = False
     SECRET_KEY = 'change_me'
     SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/test.db'
-    BEAUTIFURL_DICTIONARIES_URI = 'test_dictionaries'
+    BEAUTIFURL_DICTIONARIES_URI = os.path.join(base, 'test_dictionaries')
     BEAUTIFURL_FORMAT = 'w'
 
 class Development(Config):

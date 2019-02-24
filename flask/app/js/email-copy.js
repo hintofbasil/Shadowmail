@@ -1,21 +1,21 @@
-var $ = require('jquery');
+const $ = require('jquery');
 
-var copyButton = $('#email-copy-button');
-var copyText = $('#new-email-success-text');
-var copyStatus = $('#copy-status');
+const copyButton = $('#email-copy-button');
+const copyText = $('#new-email-success-text');
+const copyStatus = $('#copy-status');
 
-$(document).ready( () => {
-  copyButton.click( e => {
+$(document).ready(() => {
+  copyButton.click(() => {
     copyText.select();
     try {
-      var success = document.execCommand('copy');
+      const success = document.execCommand('copy');
       if (success) {
         copyStatus.html('Copied!');
       } else {
         copyStatus.html('Unable to copy');
       }
     } catch (err) {
-        copyStatus.html('Unable to copy');
+      copyStatus.html('Unable to copy');
     }
   });
 });

@@ -1,17 +1,16 @@
-var $ = require('jquery');
-var cookies = require('js-cookie');
+const $ = require('jquery');
+const cookies = require('js-cookie');
 
-var newEmailForm = $('#new-email-form');
-var newEmailSuccess = $('#new-email-success');
-var newEmailSuccessText = $('#new-email-success-text');
-var newEmailError = $('#new-email-error');
-var newEmailErrorText = $('#new-email-error-text');
-var newEmailInput = $('#new-email-input');
+const newEmailForm = $('#new-email-form');
+const newEmailSuccess = $('#new-email-success');
+const newEmailSuccessText = $('#new-email-success-text');
+const newEmailError = $('#new-email-error');
+const newEmailErrorText = $('#new-email-error-text');
+const newEmailInput = $('#new-email-input');
 
 function requestNewEmail() {
-
-  function success(response, status) {
-    if(response.status == 'OK') {
+  function success(response) {
+    if (response.status === 'OK') {
       newEmailSuccessText.val(response.email);
       newEmailError.hide();
       newEmailSuccess.show();
@@ -24,11 +23,11 @@ function requestNewEmail() {
       newEmailError.show();
       newEmailSuccess.hide();
     }
-  };
+  }
 
-  function error(jqXHR, status, error) {
-    var json = jqXHR.responseJSON
-    if (json && json.status == 'ERROR' && json.reason) {
+  const error = (jqXHR) => {
+    const json = jqXHR.responseJSON;
+    if (json && json.status === 'ERROR' && json.reason) {
       newEmailErrorText.html(json.reason);
     } else {
       newEmailErrorText.html('An unexpected error occured');
@@ -37,27 +36,26 @@ function requestNewEmail() {
     newEmailSuccess.hide();
   };
 
-  var email = newEmailInput.val();
-  var data = JSON.stringify({email: email});
+  const email = newEmailInput.val();
+  const data = JSON.stringify({ email });
   $.ajax(
     {
       type: 'POST',
       url: '/api/new',
-      data: data,
-      success: success,
-      error: error,
-      contentType: "application/json"
-    }
+      data,
+      success,
+      error,
+      contentType: 'application/json',
+    },
   );
-
 }
 
-$(document).ready( () => {
-  newEmailForm.on('submit', e => {
+$(document).ready(() => {
+  newEmailForm.on('submit', (e) => {
     e.preventDefault();
     requestNewEmail();
   });
-  var emailCookie = cookies.get('previous-email');
+  const emailCookie = cookies.get('previous-email');
   if (emailCookie) {
     newEmailInput.val(emailCookie);
   }

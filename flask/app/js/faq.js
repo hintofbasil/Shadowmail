@@ -1,13 +1,13 @@
-var $ = require('jquery');
+const $ = require('jquery');
 
-$(document).ready( () => {
-  var answers = $('.faq-answer');
-  var questions = $('.faq-question');
-  for (var i = 0; i < questions.length; i++) {
-    var answer = $(answers[i]);
-    var question = $(questions[i]);
+$(document).ready(() => {
+  const answers = $('.faq-answer');
+  const questions = $('.faq-question');
+  for (let i = 0; i < questions.length; i += 1) {
+    const answer = $(answers[i]);
+    const question = $(questions[i]);
     answer.hide();
-    question.click( e => {
+    question.click((e) => {
       $(e.currentTarget.nextElementSibling).toggle();
       e.preventDefault();
     });
