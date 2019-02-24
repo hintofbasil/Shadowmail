@@ -1,23 +1,23 @@
-from main import app, db, emailLimiter, ipLimiter, mail
-from models.virtual_alias import VirtualAlias
-from sqlalchemy.exc import InvalidRequestError, IntegrityError
+import hashlib
+import re
+import time
 
-from flask import request
 from flask_api import status
 from flask_mail import Message
 from flask_limiter.util import get_remote_address
 
 from beautifurl import Beautifurl
 import limits
-import hashlib
-import math
-import random
-import re
-import time
+from sqlalchemy.exc import InvalidRequestError, IntegrityError
+from flask import request
+
+from main import app, db, email_limiter, ip_limiter, mail
+from models.virtual_alias import VirtualAlias
+
 
 EMAIL_REGEX = '.+@.+'
 
-@emailLimiter.request_filter
+@email_limiter.request_filter
 def no_email_whitelist():
     data = request.get_json()
     return data is None or 'email' not in data
@@ -26,25 +26,25 @@ def get_email_from_request():
     data = request.get_json(force=True)
     return data['email']
 
-ip_error_message = 'Exceeded limit from same ip address: {}'.format(
+IP_ERROR_MESSAGE = 'Exceeded limit from same ip address: {}'.format(
     limits.parse(app.config['IP_RATE_LIMIT'])
 )
 
-create_email_error_message = 'Exceeded limit for same email address: {}'.format(
+CREATE_EMAIL_ERROR_MESSAGE = 'Exceeded limit for same email address: {}'.format(
     limits.parse(app.config['CREATE_EMAIL_RATE_LIMIT'])
 )
 
-request_delete_error_message = 'Exceeded limit for same email address: {}'.format(
+REQUEST_DELETE_ERROR_MESSAGE = 'Exceeded limit for same email address: {}'.format(
     limits.parse(app.config['REQUEST_DELETE_RATE_LIMIT'])
 )
 
 @app.route('/api/new', methods=['POST'])
-@ipLimiter.limit(app.config['IP_RATE_LIMIT'],
+@ip_limiter.limit(app.config['IP_RATE_LIMIT'],
                  get_remote_address,
-                 error_message=ip_error_message)
-@emailLimiter.limit(app.config['CREATE_EMAIL_RATE_LIMIT'],
-                 get_email_from_request,
-                 error_message=create_email_error_message)
+                 error_message=IP_ERROR_MESSAGE)
+@email_limiter.limit(app.config['CREATE_EMAIL_RATE_LIMIT'],
+                    get_email_from_request,
+                    error_message=CREATE_EMAIL_ERROR_MESSAGE)
 def new():
     data = request.get_json(force=True)
     if 'email' not in data:
@@ -63,8 +63,8 @@ def new():
             status='ERROR',
             reason='Invalid email address'
         ), status.HTTP_400_BAD_REQUEST
-    dictionaryPath = app.config['BEAUTIFURL_DICTIONARIES_URI']
-    beautifurl = Beautifurl(dictionaryPath=dictionaryPath)
+    dictionary_path = app.config['BEAUTIFURL_DICTIONARIES_URI']
+    beautifurl = Beautifurl(dictionary_path=dictionary_path)
     emails = beautifurl.get_permutations(app.config['BEAUTIFURL_FORMAT'], shuffle=True)
     for email in emails:
         email = email + app.config['EMAIL_POSTFIX']
@@ -90,8 +90,8 @@ def new():
 def delete():
     data = request.get_json(force=True)
     if ('email' not in data
-        or 'timestamp' not in data
-        or 'token' not in data):
+            or 'timestamp' not in data
+            or 'token' not in data):
         return dict(
             status='ERROR',
             reason='Missing arguments'
@@ -124,12 +124,12 @@ def delete():
     ), status.HTTP_200_OK
 
 @app.route('/api/request_delete', methods=['POST'])
-@ipLimiter.limit(app.config['IP_RATE_LIMIT'],
+@ip_limiter.limit(app.config['IP_RATE_LIMIT'],
                  get_remote_address,
-                 error_message=ip_error_message)
-@emailLimiter.limit(app.config['REQUEST_DELETE_RATE_LIMIT'],
-                 get_email_from_request,
-                 error_message=request_delete_error_message)
+                 error_message=IP_ERROR_MESSAGE)
+@email_limiter.limit(app.config['REQUEST_DELETE_RATE_LIMIT'],
+                    get_email_from_request,
+                    error_message=REQUEST_DELETE_ERROR_MESSAGE)
 def request_delete():
     data = request.get_json(force=True)
     if 'email' not in data:
@@ -147,7 +147,7 @@ def request_delete():
             reason='Email address not found'
         ), status.HTTP_400_BAD_REQUEST
     link = generate_delete_link(data['email'])
-    body=app.config['MAIL_DELETE_REQUEST_BODY'].format(
+    body = app.config['MAIL_DELETE_REQUEST_BODY'].format(
         email=data['email'],
         link=link
     )
@@ -164,14 +164,14 @@ def request_delete():
     ), status.HTTP_200_OK
 
 def generate_token(email, timestamp=None):
-    m = hashlib.sha256()
-    m.update(app.config['SECRET_KEY'].encode('utf-8'))
-    m.update(email.encode('utf-8'))
+    hasher = hashlib.sha256()
+    hasher.update(app.config['SECRET_KEY'].encode('utf-8'))
+    hasher.update(email.encode('utf-8'))
     if timestamp is not None:
-        m.update(str(timestamp).encode('utf-8'))
+        hasher.update(str(timestamp).encode('utf-8'))
     else:
-        m.update(str(int(time.time())).encode('utf-8'))
-    return m.hexdigest()
+        hasher.update(str(int(time.time())).encode('utf-8'))
+    return hasher.hexdigest()
 
 def generate_delete_link(email):
     timestamp = str(int(time.time()))

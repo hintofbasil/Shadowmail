@@ -1,0 +1,61 @@
+kind: pipeline
+name: default
+
+steps:
+- name: python-install
+  group: install
+  image: python
+  pull: always
+  volumes:
+    - name: python-modules
+      path: /usr/local/lib/python3.7/site-packages
+  commands:
+    - pip install -r flask/app/requirements.txt
+
+- name: javascript-install
+  group: install
+  image: node
+  pull: always
+  commands:
+    - cd flask/app
+    - npm install
+
+- name: python-lint
+  group: verify
+  image: python
+  pull: always
+  volumes:
+    - name: python-modules
+      path: /usr/local/lib/python3.7/site-packages
+  commands:
+    - pip install pylint
+    - pylint --disable=missing-docstring,protected-access,fixme --ignore=env,node_modules,main.py,config.py flask/app/*.py
+
+- name: javascript-lint
+  group: verify
+  image: node
+  pull: always
+  commands:
+    - cd flask/app
+    - ./node_modules/eslint/bin/eslint.js js
+
+- name: python-test
+  group: verify
+  image: python
+  pull: always
+  environment:
+    APP_SETTINGS:
+      Testing
+    DB_PASSWORD:
+      ""
+    SECRET_KEY:
+      "change_me"
+    FLASK_APP:
+      /drone/src/flask/app/main.py
+  volumes:
+    - name: python-modules
+      path: /usr/local/lib/python3.7/site-packages
+  commands:
+    - pip install -r flask/app/requirements.txt
+    - flask initdb
+    - flask test

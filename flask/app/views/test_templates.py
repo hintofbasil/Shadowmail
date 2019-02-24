@@ -1,5 +1,6 @@
-from main import app
 from flask_api import status
+
+from main import app
 
 def test_homepage_get():
     client = app.test_client()
