@@ -1,3 +1,5 @@
+[![Build Status](http://drone.shadowmail.co.uk/api/badges/hintofbasil/Shadowmail/status.svg)](http://drone.shadowmail.co.uk/hintofbasil/Shadowmail)
+
 # Shadowmail
 
 ## Usage
