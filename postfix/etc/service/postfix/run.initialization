@@ -1,6 +1,6 @@
-echo "user = $DB_USERNAME" >> /etc/postfix/mysql-aliases.cf
-echo "password = $DB_PASSWORD" >> /etc/postfix/mysql-aliases.cf
-echo "hosts = $DB_HOSTS" >> /etc/postfix/mysql-aliases.cf
+echo "user = $DB_USERNAME" >> /etc/postfix/pgsql-aliases.cf
+echo "password = $DB_PASSWORD" >> /etc/postfix/pgsql-aliases.cf
+echo "hosts = $DB_HOSTS" >> /etc/postfix/pgsql-aliases.cf
 
 echo "mail.$MAILNAME	OK" >> /etc/postfix/virtual_mailbox_domains
 postmap /etc/postfix/virtual_mailbox_domains

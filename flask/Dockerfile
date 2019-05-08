@@ -1,20 +1,31 @@
-FROM tiangolo/uwsgi-nginx-flask:flask-python3.5
+FROM node:8 as static
 
-ENV FLASK_APP /app/main.py
+ENV STATIC_HOME /static
+WORKDIR $STATIC_HOME
+COPY static $STATIC_HOME
 
-COPY ./app /app
 
-COPY ./etc /etc
+RUN npm install \
+    && npm install -g gulp-cli \
+    && gulp prod \
+    && cp -r /$STATIC_HOME/images /$STATIC_HOME/out
 
-RUN rm /etc/nginx/conf.d/nginx.conf
+FROM python:3.7-alpine
 
-RUN pip install -r /app/requirements.txt
+ENV PORT 8000
 
-# Install NodeJS - requires additional repository
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash && apt-get update && apt-get install nodejs -y && rm -rf /var/lib/apt/lists/*
+ENV APP_SETTINGS Development
+ENV DB_PASSWORD "change_me"
+ENV SECRET_KEY "change_me"
+ENV FLASK_DEBUG=1
 
-# Install npm and run gulp build
-RUN cd /app && npm install && npm install -g gulp-cli && gulp prod && cp /app/images /app/static -r
+ENV APP_HOME /app
+WORKDIR $APP_HOME
+COPY app $APP_HOME
 
-#Enable logging
-RUN echo "logto = /var/log/uwsgi/uwsgi.log" >> /etc/uwsgi/uwsgi.ini && mkdir -p /var/log/uwsgi
+RUN pip install -r $APP_HOME/requirements.txt
+RUN pip install gunicorn
+
+COPY --from=static /static/out /app/static
+
+CMD exec gunicorn --bind :$PORT --workers 1 main:app

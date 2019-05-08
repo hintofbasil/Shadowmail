@@ -1,5 +1,5 @@
 # Taken from https://github.com/tozd/docker-postfix/
-# Needs to be compiled with mysql support
+# Needs to be compiled with postgresql support
 FROM tozd/runit
 
 EXPOSE 25/tcp 465/tcp 587/tcp
@@ -18,7 +18,7 @@ RUN apt-get update -q -q && \
  echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set-selections && \
  echo postfix postfix/mynetworks string "127.0.0.0/8" | debconf-set-selections && \
  echo postfix postfix/mailname string temporary.example.com | debconf-set-selections && \
- apt-get --yes --force-yes install postfix-mysql && \
+ apt-get --yes --force-yes install postfix-pgsql && \
  postconf -e mydestination="localhost.localdomain, localhost" && \
  postconf -e smtpd_banner='$myhostname ESMTP $mail_name' && \
  postconf -# myhostname && \

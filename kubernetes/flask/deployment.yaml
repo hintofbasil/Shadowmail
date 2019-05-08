@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: shadowmail
+  name: shadowmail-flask
+  labels:
+    app: shadowmail
+    component: flask
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shadowmail
+      component: flask
+  template:
+    metadata:
+      labels:
+        app: shadowmail
+        component: flask
+    spec:
+      containers:
+      - name: flask
+        image: 265777547582.dkr.ecr.eu-west-1.amazonaws.com/shadowmail-flask:${DOCKER_BUILD_NUMBER}
+        ports:
+          - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: shadowmail-config
+        - secretRef:
+            name: flask-secrets
+      imagePullSecrets:
+      - name: docker-config

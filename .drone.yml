@@ -17,7 +17,7 @@ steps:
   image: node
   pull: always
   commands:
-    - cd flask/app
+    - cd flask/static
     - npm install
 
 - name: python-lint
@@ -36,7 +36,7 @@ steps:
   image: node
   pull: always
   commands:
-    - cd flask/app
+    - cd flask/static
     - ./node_modules/eslint/bin/eslint.js js
 
 - name: python-test
@@ -59,3 +59,95 @@ steps:
     - pip install -r flask/app/requirements.txt
     - flask initdb
     - flask test
+
+- name: publish-image-flask  
+  image: plugins/ecr
+  pull: always
+  settings:
+    access_key:
+      from_secret: ECR_WRITE_ACCESS_KEY_ID
+    secret_key:
+      from_secret: ECR_WRITE_SECRET_ACCESS_KEY
+    repo: shadowmail-flask
+    registry: 265777547582.dkr.ecr.eu-west-1.amazonaws.com
+    region: eu-west-1
+    dockerfile: flask/Dockerfile
+    context: flask
+    tags:
+    - ${DRONE_BUILD_NUMBER}
+  when:
+    branch: master
+    event: push
+
+- name: publish-image-postfix  
+  image: plugins/ecr
+  pull: always
+  settings:
+    access_key:
+      from_secret: ECR_WRITE_ACCESS_KEY_ID
+    secret_key:
+      from_secret: ECR_WRITE_SECRET_ACCESS_KEY
+    repo: shadowmail-postfix
+    registry: 265777547582.dkr.ecr.eu-west-1.amazonaws.com
+    region: eu-west-1
+    dockerfile: postfix/Dockerfile
+    context: postfix
+    tags:
+    - ${DRONE_BUILD_NUMBER}
+  when:
+    branch: master
+    event: push
+
+- name: populate-secrets
+  image: node:alpine
+  pull: always
+  environment:
+    DOMAIN_NAME: shadowmail.co.uk
+    DOCKER_BUILD_NUMBER: ${DRONE_BUILD_NUMBER}
+    DB_PASSWORD:
+      from_secret: DB_PASSWORD
+    SECRET_KEY:
+      from_secret: SECRET_KEY
+    DB_DOMAIN:
+      from_secret: DB_DOMAIN
+  commands:
+    - npm install -g envsub
+    - find kubernetes/ -name *.yaml -exec envsub --protect {} \;
+  when:
+    branch: master
+    event: push
+
+- name: deploy-kubernetes
+  image: ubuntu
+  pull: always
+  environment:
+    DO_TOKEN:
+      from_secret: DO_TOKEN
+    DOCTL_VERSION: 1.20.1
+    KUBECTL_VERSION: 1.15.0
+    CLUSTER_NAME: overmind
+  commands:
+    - apt-get update && apt-get install curl -y
+    - mkdir -p /root/.config/doctl
+    - 'echo "access-token: $DO_TOKEN" >> /root/.config/doctl/config.yaml'
+    - curl -sL https://github.com/digitalocean/doctl/releases/download/v$DOCTL_VERSION/doctl-$DOCTL_VERSION-linux-amd64.tar.gz | tar -xzv
+    - curl -LO https://storage.googleapis.com/kubernetes-release/release/v$KUBECTL_VERSION/bin/linux/amd64/kubectl
+    - chmod +x kubectl
+    - ./doctl kubernetes cluster kubeconfig save $CLUSTER_NAME
+    - mv doctl /root/.kube/
+    - ./kubectl apply -f kubernetes/namespace.yaml
+    - ./kubectl apply -f kubernetes/flask/certificate.yaml
+    - ./kubectl apply -f kubernetes/flask/config.yaml
+    - ./kubectl apply -f kubernetes/flask/deployment.yaml
+    - ./kubectl apply -f kubernetes/flask/ingress.yaml
+    - ./kubectl apply -f kubernetes/flask/secret.yaml
+    - ./kubectl apply -f kubernetes/flask/service.yaml
+    - ./kubectl apply -f kubernetes/postfix/certificate.yaml
+    - ./kubectl apply -f kubernetes/postfix/config.yaml
+    - ./kubectl apply -f kubernetes/postfix/deployment.yaml
+    - ./kubectl apply -f kubernetes/postfix/persistant-volume-claim.yaml
+    - ./kubectl apply -f kubernetes/postfix/secret.yaml
+    - ./kubectl apply -f kubernetes/postfix/service.yaml
+  when:
+    branch: master
+    event: push

@@ -1,5 +1,0 @@
-dbname = shadowmail
-
-query = SELECT real_email FROM virtual_alias WHERE alias_email='%s' AND enabled='1'
-
-option_group = client
