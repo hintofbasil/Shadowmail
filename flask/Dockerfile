@@ -10,7 +10,7 @@ RUN npm install \
     && gulp prod \
     && cp -r /$STATIC_HOME/images /$STATIC_HOME/out
 
-FROM python:3.7-alpine
+FROM python:3.7
 
 ENV PORT 8000
 

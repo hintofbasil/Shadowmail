@@ -14,7 +14,7 @@ steps:
 
 - name: javascript-install
   group: install
-  image: node
+  image: node:8
   pull: always
   commands:
     - cd flask/static
@@ -33,7 +33,7 @@ steps:
 
 - name: javascript-lint
   group: verify
-  image: node
+  image: node:8
   pull: always
   commands:
     - cd flask/static
