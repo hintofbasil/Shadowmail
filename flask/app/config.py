@@ -7,6 +7,15 @@ def load_email(email):
     with open(path, 'r') as f:
         return f.read()
 
+def get_database_uri():
+    db_protocol = os.environ.get('DB_PROTOCOL', 'mysql')
+    db_username = os.environ.get('DB_USERNAME', 'flask')
+    db_password = os.environ.get('DB_PASSWORD')
+    db_domain = os.environ.get('DB_DOMAIN', 'db')
+    db_database = os.environ.get('DB_DATABASE', 'shadowmail')
+    return f'{db_protocol}://{db_username}:{db_password}' \
+           f'@{db_domain}/{db_database}'
+
 class Config:
     DEBUG = True
     TESTING = True
@@ -50,8 +59,7 @@ class Docker(Config):
     DEBUG = False
     TESTING = False
     SECRET_KEY = os.environ['SECRET_KEY']
-    SQLALCHEMY_DATABASE_URI = 'mysql://flask:' + os.environ['DB_PASSWORD'] + '@db/shadowmail'
-
+    SQLALCHEMY_DATABASE_URI = get_database_uri()
     MAIL_SERVER = 'postfix'
     MAIL_PORT = 25
     MAIL_USE_TLS = True

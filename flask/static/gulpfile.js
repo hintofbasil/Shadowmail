@@ -22,11 +22,11 @@ gulp.task('sass', function() {
   return gulp.src(paths.sass)
     .pipe(sass().on('error', sass.logError))
     .pipe(concatCss('bundle.css'))
-    .pipe(gulp.dest('static/css'))
+    .pipe(gulp.dest('out/css'))
 });
 
 gulp.task('clean', function() {
-  return del(['./static']);
+  return del(['./out']);
 });
 
 gulp.task('javascript-dev', function() {
@@ -39,7 +39,7 @@ gulp.task('javascript-dev', function() {
     .bundle()
     .pipe(source('bundle.js'))
     .pipe(buffer())
-    .pipe(gulp.dest('static/js'))
+    .pipe(gulp.dest('out/js'))
   });
 });
 
@@ -57,7 +57,7 @@ gulp.task('javascript-prod', function() {
     .pipe(buffer())
     .pipe(uglify())
       .on('error', gutil.log)
-    .pipe(gulp.dest('static/js'))
+    .pipe(gulp.dest('out/js'))
   });
 });
 

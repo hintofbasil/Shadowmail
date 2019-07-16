@@ -19,9 +19,9 @@ smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_una
 # TLS settings
 smtpd_use_tls=yes
 smtpd_tls_ask_ccert = yes
-smtpd_tls_cert_file=/ssl/fullchain.pem
-smtpd_tls_key_file=/ssl/privkey.pem
-smtpd_tls_CAfile = /ssl/cert.pem
+smtpd_tls_cert_file=/ssl/tls.crt
+smtpd_tls_key_file=/ssl/tls.key
+smtpd_tls_CAfile = /ssl/tls.crt
 smtpd_tls_ciphers = high
 smtpd_tls_loglevel = 1
 smtpd_tls_security_level = may
@@ -30,7 +30,7 @@ smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 
 # Virtual users
-virtual_alias_maps = mysql:/etc/postfix/mysql-aliases.cf
+virtual_alias_maps = pgsql:/etc/postfix/pgsql-aliases.cf
 message_size_limit = 104857600
 virtual_mailbox_domains = hash:/etc/postfix/virtual_mailbox_domains
 
@@ -39,8 +39,8 @@ append_dot_mydomain = no
 
 readme_directory = no
 
-myhostname = shadowmail.co.uk
-mydestination = $myhostname, mail.shadowmail.co.uk, localhost.eu-west-1.compute.internal, localhost
+myhostname = mailout.shadowmail.co.uk
+mydestination = shadowmail.co.uk, mail.shadowmail.co.uk, localhost
 relayhost = 
 mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 flask
 mailbox_size_limit = 0

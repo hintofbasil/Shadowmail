@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postfix-config
+  namespace: shadowmail
+data:
+  DB_HOSTS: "${DB_DOMAIN}"
+  DB_USERNAME: "flask"
+  MY_DESTINATION: "$myhostname, ${DOMAIN_NAME}, localhost.localdomain, localhost"
+  MAILNAME: "${DOMAIN_NAME}"
