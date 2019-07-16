@@ -1,46 +1,10 @@
+---
 kind: pipeline
 name: default
 
 steps:
-- name: python-install
+- name: python-install-and-test
   group: install
-  image: python
-  pull: always
-  volumes:
-    - name: python-modules
-      path: /usr/local/lib/python3.7/site-packages
-  commands:
-    - pip install -r flask/app/requirements.txt
-
-- name: javascript-install
-  group: install
-  image: node:8
-  pull: always
-  commands:
-    - cd flask/static
-    - npm install
-
-- name: python-lint
-  group: verify
-  image: python
-  pull: always
-  volumes:
-    - name: python-modules
-      path: /usr/local/lib/python3.7/site-packages
-  commands:
-    - pip install pylint
-    - pylint --disable=missing-docstring,protected-access,fixme --ignore=env,node_modules,main.py,config.py flask/app/*.py
-
-- name: javascript-lint
-  group: verify
-  image: node:8
-  pull: always
-  commands:
-    - cd flask/static
-    - ./node_modules/eslint/bin/eslint.js js
-
-- name: python-test
-  group: verify
   image: python
   pull: always
   environment:
@@ -52,13 +16,21 @@ steps:
       "change_me"
     FLASK_APP:
       /drone/src/flask/app/main.py
-  volumes:
-    - name: python-modules
-      path: /usr/local/lib/python3.7/site-packages
   commands:
     - pip install -r flask/app/requirements.txt
+    - pip install pylint
+    - pylint --disable=missing-docstring,protected-access,fixme --ignore=env,node_modules,main.py,config.py flask/app/*.py
     - flask initdb
     - flask test
+
+- name: javascript-install-and-test
+  group: install
+  image: node:8
+  pull: always
+  commands:
+    - cd flask/static
+    - npm install
+    - ./node_modules/eslint/bin/eslint.js js
 
 - name: publish-image-flask  
   image: plugins/ecr
@@ -151,3 +123,9 @@ steps:
   when:
     branch: master
     event: push
+
+---
+kind: signature
+hmac: c792aa9fc85d7f676669463a3f947038a189e8e012159c8b9ca7cf34a797d3b4
+
+...
