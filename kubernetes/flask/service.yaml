@@ -14,5 +14,5 @@ spec:
     protocol: TCP
     name: http
   selector:
-    app: shadowmails
+    app: shadowmail
     component: flask
