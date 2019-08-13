@@ -28,5 +28,3 @@ spec:
             name: shadowmail-config
         - secretRef:
             name: flask-secrets
-      imagePullSecrets:
-      - name: docker-config

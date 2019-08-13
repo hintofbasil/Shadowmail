@@ -36,8 +36,6 @@ spec:
             name: postfix-config
         - secretRef:
             name: postfix-secrets
-      imagePullSecrets:
-      - name: docker-config
       volumes:
       - name: ssl
         secret:
