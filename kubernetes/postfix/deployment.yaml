@@ -43,3 +43,5 @@ spec:
       - name: postfix-spool
         persistentVolumeClaim:
           claimName: postfix-spool
+      nodeSelector:
+        ptr: shadowmail.co.uk
