@@ -1,6 +1,6 @@
 # Taken from https://github.com/tozd/docker-postfix/
 # Needs to be compiled with postgresql support
-FROM tozd/runit
+FROM tozd/runit:ubuntu-trusty
 
 EXPOSE 25/tcp 465/tcp 587/tcp
 
