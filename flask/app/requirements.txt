@@ -18,6 +18,8 @@ limits==1.2.1
 MarkupSafe==0.23
 mccabe==0.6.1
 packaging==16.8
+prometheus-client==0.7.1
+prometheus-flask-exporter==0.9.1
 psycopg2==2.8.3
 py==1.4.33
 pylint==2.2.2

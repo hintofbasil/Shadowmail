@@ -17,6 +17,9 @@ spec:
       labels:
         app: shadowmail
         component: flask
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '80'
     spec:
       containers:
       - name: flask
