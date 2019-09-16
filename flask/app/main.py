@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
 import os
+
 from flask_api import FlaskAPI
 from flask_sqlalchemy import SQLAlchemy
 from flask_limiter import Limiter
 from flask_mail import Mail
+from prometheus_flask_exporter import PrometheusMetrics
 
 app = FlaskAPI(__name__)
 
@@ -16,6 +18,8 @@ email_limiter = Limiter(app)
 ip_limiter = Limiter(app)
 
 mail = Mail(app)
+
+metrics = PrometheusMetrics(app)
 
 from models.virtual_alias import *
 from views.api import *

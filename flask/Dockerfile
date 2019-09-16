@@ -21,10 +21,12 @@ ENV FLASK_DEBUG=1
 
 ENV APP_HOME /app
 WORKDIR $APP_HOME
-COPY app $APP_HOME
 
+COPY app/requirements.txt /app/requirements.txt
 RUN pip install -r $APP_HOME/requirements.txt
 RUN pip install gunicorn
+
+COPY app $APP_HOME
 
 COPY --from=static /static/out /app/static
 
