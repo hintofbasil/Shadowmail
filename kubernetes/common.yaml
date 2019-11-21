@@ -1,0 +1,76 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: shadowmail
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: flask-nginx-ingress
+  namespace: shadowmail
+  labels:
+    app: shadowmail
+    component: flask
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+          location /metrics {
+            return 404;
+          }
+spec:
+  tls:
+  - hosts:
+    - ${DOMAIN_NAME}
+    - www.${DOMAIN_NAME}
+    secretName: shadowmail-tls
+  rules:
+  - host: www.${DOMAIN_NAME}
+    http:
+      paths:
+      - path: /api
+        backend:
+          serviceName: shadowmail-flask-service
+          servicePort: 8000
+      - path: /
+        backend:
+          serviceName: shadowmail-frontend-service
+          servicePort: 9000
+  - host: ${DOMAIN_NAME}
+    http:
+      paths:
+      - path: /api
+        backend:
+          serviceName: shadowmail-flask-service
+          servicePort: 8000
+      - path: /
+        backend:
+          serviceName: shadowmail-frontend-service
+          servicePort: 9000
+---
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  namespace: shadowmail
+  name: shadowmail-flask
+  labels:
+    app: shadowmail
+    component: flask
+spec:
+  secretName: shadowmail-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: www.${DOMAIN_NAME}
+  dnsNames:
+  - ${DOMAIN_NAME}
+  - www.${DOMAIN_NAME}
+  acme:
+    config:
+    - http01:
+        ingressClass: nginx
+      domains:
+      - ${DOMAIN_NAME}
+      - www.${DOMAIN_NAME}

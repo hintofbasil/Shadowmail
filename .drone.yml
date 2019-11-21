@@ -52,6 +52,25 @@ steps:
     branch: master
     event: push
 
+- name: publish-image-frontend  
+  image: plugins/ecr
+  pull: always
+  settings:
+    access_key:
+      from_secret: ECR_WRITE_ACCESS_KEY_ID
+    secret_key:
+      from_secret: ECR_WRITE_SECRET_ACCESS_KEY
+    repo: shadowmail-frontend
+    registry: 265777547582.dkr.ecr.eu-west-1.amazonaws.com
+    region: eu-west-1
+    dockerfile: frontend/Dockerfile
+    context: frontend
+    tags:
+    - ${DRONE_BUILD_NUMBER}
+  when:
+    branch: master
+    event: push
+
 - name: publish-image-postfix  
   image: plugins/ecr
   pull: always
@@ -108,25 +127,16 @@ steps:
     - chmod +x kubectl
     - ./doctl kubernetes cluster kubeconfig save $CLUSTER_NAME
     - mv doctl /root/.kube/
-    - ./kubectl apply -f kubernetes/namespace.yaml
-    - ./kubectl apply -f kubernetes/flask/certificate.yaml
-    - ./kubectl apply -f kubernetes/flask/config.yaml
-    - ./kubectl apply -f kubernetes/flask/deployment.yaml
-    - ./kubectl apply -f kubernetes/flask/ingress.yaml
-    - ./kubectl apply -f kubernetes/flask/secret.yaml
-    - ./kubectl apply -f kubernetes/flask/service.yaml
-    - ./kubectl apply -f kubernetes/postfix/certificate.yaml
-    - ./kubectl apply -f kubernetes/postfix/config.yaml
-    - ./kubectl apply -f kubernetes/postfix/deployment.yaml
-    - ./kubectl apply -f kubernetes/postfix/persistant-volume-claim.yaml
-    - ./kubectl apply -f kubernetes/postfix/secret.yaml
-    - ./kubectl apply -f kubernetes/postfix/service.yaml
+    - ./kubectl apply -f kubernetes/common.yaml
+    - ./kubectl apply -f kubernetes/flask.yaml
+    - ./kubectl apply -f kubernetes/frontend.yaml
+    - ./kubectl apply -f kubernetes/postfix.yaml
   when:
     branch: master
     event: push
 
 ---
 kind: signature
-hmac: 259089f9bb799286ff444f2fe267a6142f0d5538067483686eec1f0808056520
+hmac: d8be4ca6f5be9374ace1d0fa13ab03641e25a244faafb622c1652decc69309a3
 
 ...

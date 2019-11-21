@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -31,3 +32,43 @@ spec:
             name: shadowmail-config
         - secretRef:
             name: flask-secrets
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shadowmail-config
+  namespace: shadowmail
+data:
+  DB_DOMAIN: "${DB_DOMAIN}"
+  FLASK_APP: "/app/main.py"
+  APP_SETTINGS: "Docker" 
+  DB_PROTOCOL: postgres
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: flask-secrets
+  namespace: shadowmail
+type: Opaque
+data:
+  DB_PASSWORD: "${DB_PASSWORD}"
+  SECRET_KEY: "${SECRET_KEY}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shadowmail-flask-service
+  labels:
+    app: shadowmail
+    component: flask
+  namespace: shadowmail
+spec:
+  type: NodePort
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
+    name: http
+  selector:
+    app: shadowmail
+    component: flask

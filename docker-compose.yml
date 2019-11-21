@@ -1,66 +1,81 @@
 version: '2'
 services:
   db:
-    build: ./mysql
+    image: postgres:latest
     environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
-      MYSQL_DATABASE: 'shadowmail'
-      FLASK_DB_PASSWORD: ${FLASK_DB_PASSWORD}
-      POSTFIX_DB_PASSWORD: ${POSTFIX_DB_PASSWORD}
-      BACKUP_DB_PASSWORD: ${BACKUP_DB_PASSWORD}
+      POSTGRES_DATABASE: 'shadowmail'
+      POSTGRES_USER: 'shadowmail'
+      POSTGRES_PASSWORD: 'shadowmail_pass'
     volumes:
-      - /var/log/mysql:/var/log/mysql
-      - /var/lib/mysql:/var/lib/mysql
+    - ./build/database:/var/lib/postgresql/data
 
-  postfix:
-    build: ./postfix
-    environment:
-      DB_USERNAME: postfix
-      DB_PASSWORD: ${POSTFIX_DB_PASSWORD}
-      DB_HOSTS: db:3306
-
-      # Inherited from tozd/postfix
-      MAILNAME: ${MAILNAME}
-      MY_NETWORKS: 172.18.0.0/16 127.0.0.0/8
-      MY_DESTINATION: $$myhostname, ${MAILNAME}, localhost.localdomain, localhost
-      ROOT_ALIAS: ""
-    ports:
-      - "25:25"
-      - "465:465"
-      - "587:587"
+  proxy:
+    image: nginx:latest
     depends_on:
-      - db
+      - frontend
+      - backend
+    ports:
+    - 8000:80
     volumes:
-      - /var/log/postfix:/var/log/postfix
-      - /var/spool/postfix:/var/spool/postfix
-      - ${SSL_LOCATION}:/ssl:ro
+    - ./nginx_proxy.conf:/etc/nginx/conf.d/default.conf:ro
+    logging:
+      driver: "none"
 
-  flask:
+  frontend:
+    build: ./frontend
+    environment:
+      COMMAND: 'develop'
+    volumes:
+    - ./frontend/src:/app/src
+    - ./frontend/gatsby-browser.js:/app/gatsby-browser.js
+    - ./frontend/gatsby-config.js:/app/gatsby-config.js
+
+  backend:
     build: ./flask
-    ports:
-      - "80:80"
-      - "443:443"
     environment:
-      APP_SETTINGS: 'Docker'
-      DB_PASSWORD: ${FLASK_DB_PASSWORD}
-      SECRET_KEY: ${FLASK_SECRET_KEY}
-    depends_on:
-      - db
+      APP_SETTINGS: 'Development'
+      DB_USERNAME: 'shadowmail'
+      DB_PASSWORD: 'shadowmail_pass'
+      SECRET_KEY: 'SECRET_KEY'
+      DB_DOMAIN: 'db'
+      DB_PROTOCOL: 'postgres'
+      RELOAD: '--reload'
     volumes:
-      - /var/log/nginx:/var/log/nginx
-      - /var/log/uwsgi:/var/log/uwsgi
-      - ${SSL_LOCATION}:/ssl:ro
+    - ./flask/app:/app:ro
 
-  aws-backup:
-    build: ./aws-backup
-    environment:
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-      AWS_REGION: ${AWS_REGION}
-      AWS_BUCKET_NAME: ${AWS_BUCKET_NAME}
-      DB_NAME: 'shadowmail'
-      DB_PASSWORD: ${BACKUP_DB_PASSWORD}
+  migrate:
+    build: ./flask
     depends_on:
-      - db
-    volumes:
-      - ${OPENSSL_PUBLIC_KEY_LOCATION}:/openssl
+    - db
+    environment:
+      APP_SETTINGS: 'Development'
+      DB_USERNAME: 'shadowmail'
+      DB_PASSWORD: 'shadowmail_pass'
+      DB_DOMAIN: 'db'
+      DB_PROTOCOL: 'postgres'
+      FLASK_APP: '/app/main.py'
+    restart: on-failure
+    command: flask initdb
+
+  # postfix:
+  #   build: ./postfix
+  #   environment:
+  #     DB_USERNAME: postfix
+  #     DB_PASSWORD: ${POSTFIX_DB_PASSWORD}
+  #     DB_HOSTS: db:3306
+
+  #     # Inherited from tozd/postfix
+  #     MAILNAME: ${MAILNAME}
+  #     MY_NETWORKS: 172.18.0.0/16 127.0.0.0/8
+  #     MY_DESTINATION: $$myhostname, ${MAILNAME}, localhost.localdomain, localhost
+  #     ROOT_ALIAS: ""
+  #   ports:
+  #     - "25:25"
+  #     - "465:465"
+  #     - "587:587"
+  #   depends_on:
+  #     - db
+  #   volumes:
+  #     - /var/log/postfix:/var/log/postfix
+  #     - /var/spool/postfix:/var/spool/postfix
+  #     - ${SSL_LOCATION}:/ssl:ro

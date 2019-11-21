@@ -47,9 +47,9 @@ class Testing(Config):
     BEAUTIFURL_FORMAT = 'w'
 
 class Development(Config):
-    CSRF_ENABLED = False
+    TESTING = False
     SECRET_KEY = 'change_me'
-    SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/test.db'
+    SQLALCHEMY_DATABASE_URI = get_database_uri()
     IP_RATE_LIMIT = '1000/30minutes'
     CREATE_EMAIL_RATE_LIMIT = '3000/30minutes'
     REQUEST_DELETE_RATE_LIMIT = '1000/30minutes'

@@ -1,0 +1,135 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: shadowmail
+  name: shadowmail-postfix
+  labels:
+    app: shadowmail
+    component: postfix
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shadowmail
+      component: postfix
+  template:
+    metadata:
+      labels:
+        app: shadowmail
+        component: postfix
+    spec:
+      containers:
+      - name: postfix
+        image: 265777547582.dkr.ecr.eu-west-1.amazonaws.com/shadowmail-postfix:${DOCKER_BUILD_NUMBER}
+        ports:
+        - containerPort: 25
+        - containerPort: 465
+        - containerPort: 587
+        volumeMounts:
+        - name: ssl
+          mountPath: "/ssl"
+          readOnly: true
+        - mountPath: "/var/spool/postfix"
+          name: postfix-spool
+        envFrom:
+        - configMapRef:
+            name: postfix-config
+        - secretRef:
+            name: postfix-secrets
+      volumes:
+      - name: ssl
+        secret:
+          secretName: shadowmail-postfix-tls
+      - name: postfix-spool
+        persistentVolumeClaim:
+          claimName: postfix-spool
+      nodeSelector:
+        ptr: shadowmail.co.uk
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postfix-config
+  namespace: shadowmail
+data:
+  DB_HOSTS: "${DB_DOMAIN}"
+  DB_USERNAME: "flask"
+  MY_DESTINATION: "$myhostname, ${DOMAIN_NAME}, localhost.localdomain, localhost"
+  MAILNAME: "${DOMAIN_NAME}"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postfix-secrets
+  namespace: shadowmail
+type: Opaque
+data:
+  DB_PASSWORD: "${DB_PASSWORD}"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: shadowmail
+  name: postfix-spool
+  labels:
+    app: shadowmail
+    component: postfix
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shadowmail-postfix-service
+  labels:
+    app: shadowmail
+    component: postfix
+  namespace: shadowmail
+spec:
+  type: NodePort
+  ports:
+  - port: 25
+    targetPort: 25
+    protocol: TCP
+    name: smtp
+  - port: 465
+    targetPort: 465
+    protocol: TCP
+    name: smtp-tls
+  - port: 587
+    targetPort: 587
+    protocol: TCP
+    name: smtp-starttls
+  selector:
+    app: shadowmail
+    component: postfix
+---
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  namespace: shadowmail
+  name: shadowmail-postfix
+  labels:
+    app: shadowmail
+    component: postfix
+spec:
+  secretName: shadowmail-postfix-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: mail.${DOMAIN_NAME}
+  dnsNames:
+  - mail.${DOMAIN_NAME}
+  acme:
+    config:
+    - http01:
+        ingressClass: nginx
+      domains:
+      - mail.${DOMAIN_NAME}
+---
