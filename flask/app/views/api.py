@@ -156,9 +156,10 @@ def request_delete():
                   recipients=[data['email']],
                   body=body
                  )
-    mail.send(msg)
     if app.config['DEBUG']:
         print(msg)
+    else:
+        mail.send(msg)
     return dict(
         status='OK',
     ), status.HTTP_200_OK
