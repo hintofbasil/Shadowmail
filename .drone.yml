@@ -1,5 +1,6 @@
 ---
 kind: pipeline
+type: kubernetes
 name: default
 
 steps:
@@ -28,9 +29,9 @@ steps:
   image: node:8
   pull: always
   commands:
-    - cd flask/static
+    - cd frontend/
     - npm install
-    - ./node_modules/eslint/bin/eslint.js js
+    - npm run lint
 
 - name: publish-image-flask  
   image: plugins/ecr
@@ -126,6 +127,6 @@ steps:
 
 ---
 kind: signature
-hmac: c792aa9fc85d7f676669463a3f947038a189e8e012159c8b9ca7cf34a797d3b4
+hmac: 259089f9bb799286ff444f2fe267a6142f0d5538067483686eec1f0808056520
 
 ...
