@@ -40,8 +40,9 @@ metadata:
   namespace: shadowmail
 data:
   DB_DOMAIN: "${DB_DOMAIN}"
+  MAIL_SERVER_URI: "shadowmail-postfix-service.shadowmail.svc.cluster.local"
   FLASK_APP: "/app/main.py"
-  APP_SETTINGS: "Docker" 
+  APP_SETTINGS: Production
   DB_PROTOCOL: postgres
 ---
 apiVersion: v1
