@@ -54,12 +54,12 @@ class Development(Config):
     CREATE_EMAIL_RATE_LIMIT = '3000/30minutes'
     REQUEST_DELETE_RATE_LIMIT = '1000/30minutes'
 
-class Docker(Config):
+class Production(Config):
     DEVELOPMENT = False
     DEBUG = False
     TESTING = False
     SECRET_KEY = os.environ['SECRET_KEY']
     SQLALCHEMY_DATABASE_URI = get_database_uri()
-    MAIL_SERVER = 'postfix'
+    MAIL_SERVER = os.environ.get('MAIL_SERVER_URI')
     MAIL_PORT = 25
     MAIL_USE_TLS = True
