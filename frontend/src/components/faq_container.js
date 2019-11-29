@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import FaqElement from './faq_element';
 
@@ -55,7 +56,7 @@ class FaqContainer extends React.Component {
       </div>
 
       {
-        FAQ_CONTENT.map(
+        this.props.details.map(
           (element) => (
             <FaqElement
               key={element.summary}
@@ -69,5 +70,17 @@ class FaqContainer extends React.Component {
   )
 }
 
+FaqContainer.propTypes = {
+  details: PropTypes.arrayOf(
+    PropTypes.shape({
+      summary: PropTypes.string.isRequired,
+      content: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+};
+
+FaqContainer.defaultProps = {
+  details: FAQ_CONTENT,
+};
 
 export default FaqContainer;

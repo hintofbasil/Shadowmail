@@ -65,5 +65,4 @@ class DescriptorContainer extends React.Component {
   )
 }
 
-
 export default DescriptorContainer;
