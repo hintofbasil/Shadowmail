@@ -31,6 +31,7 @@ steps:
   commands:
     - cd frontend/
     - npm install
+    - npm run test
     - npm run lint
 
 - name: publish-image-flask  
@@ -137,6 +138,6 @@ steps:
 
 ---
 kind: signature
-hmac: d8be4ca6f5be9374ace1d0fa13ab03641e25a244faafb622c1652decc69309a3
+hmac: 218ccc864d742e895963886f5abc433f4ce2567ae29a9524787e19f198bbf55c
 
 ...
