@@ -18,7 +18,7 @@ class DescriptorElement extends React.Component {
 DescriptorElement.propTypes = {
   title: PropTypes.string.isRequired,
   symbol: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
+  description: PropTypes.node.isRequired,
 };
 
 export default DescriptorElement;

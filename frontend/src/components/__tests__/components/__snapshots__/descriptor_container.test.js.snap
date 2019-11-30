@@ -1,0 +1,93 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render renders successfully 1`] = `
+<div
+  className="background"
+>
+  <div
+    className="container"
+  >
+    <div
+      className="row descriptor-container"
+    >
+      <div
+        className="four columns descriptor descriptor-three"
+      >
+        <div
+          className="descriptor-title"
+        >
+          Simple
+        </div>
+        <div>
+          <i
+            className="material-icons descriptor-icon"
+          >
+            done
+          </i>
+        </div>
+        <div
+          className="descriptor-text"
+        >
+          <span>
+            ShadowMail is simple to use. Simply enter your email address and start using your private, virtual email address immediately.
+          </span>
+        </div>
+      </div>
+      <div
+        className="four columns descriptor descriptor-three"
+      >
+        <div
+          className="descriptor-title"
+        >
+          Secure
+        </div>
+        <div>
+          <i
+            className="material-icons descriptor-icon"
+          >
+            lock
+          </i>
+        </div>
+        <div
+          className="descriptor-text"
+        >
+          <span>
+            ShadowMails is 100%
+            <a
+              href="https://github.com/hintofbasil/ShadowMail"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              open source
+            </a>
+            . You can audit our code yourself to ensure you're comfortable with our practises.
+          </span>
+        </div>
+      </div>
+      <div
+        className="four columns descriptor descriptor-three"
+      >
+        <div
+          className="descriptor-title"
+        >
+          Private
+        </div>
+        <div>
+          <i
+            className="material-icons descriptor-icon"
+          >
+            fingerprint
+          </i>
+        </div>
+        <div
+          className="descriptor-text"
+        >
+          <span>
+            We care about privacy as much as you do.  As such we never save, read or otherwise monitor your emails.
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -29,6 +29,11 @@ services:
     - ./frontend/src:/app/src
     - ./frontend/gatsby-browser.js:/app/gatsby-browser.js
     - ./frontend/gatsby-config.js:/app/gatsby-config.js
+    - ./frontend/package.json:/app/package.json
+    - ./frontend/package-lock.json:/app/package-lock.json
+    - ./frontend/loadershim.js:/app/loadershim.js
+    - ./frontend/jest.config.js:/app/jest.config.js
+    - ./frontend/jest-preprocess.js:/app/jest-preprocess.js
 
   backend:
     build: ./flask

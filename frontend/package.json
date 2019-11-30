@@ -25,7 +25,12 @@
     "react-helmet": "^5.2.1"
   },
   "devDependencies": {
-    "prettier": "^1.18.2"
+    "babel-jest": "^24.9.0",
+    "babel-preset-gatsby": "^0.2.22",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^24.9.0",
+    "prettier": "^1.18.2",
+    "react-test-renderer": "^16.12.0"
   },
   "keywords": [
     "gatsby"
@@ -37,7 +42,8 @@
     "lint": "eslint src/",
     "start": "npm run develop",
     "serve": "gatsby serve",
-    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
+    "test": "jest src/",
+    "test:watch": "jest src/ --watch"
   },
   "repository": {
     "type": "git",
