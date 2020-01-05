@@ -47,6 +47,7 @@ steps:
     region: eu-west-1
     dockerfile: flask/Dockerfile
     context: flask
+    storage_driver: overlay
     tags:
     - ${DRONE_BUILD_NUMBER}
   when:
@@ -66,6 +67,7 @@ steps:
     region: eu-west-1
     dockerfile: frontend/Dockerfile
     context: frontend
+    storage_driver: overlay
     tags:
     - ${DRONE_BUILD_NUMBER}
   when:
@@ -85,6 +87,7 @@ steps:
     region: eu-west-1
     dockerfile: postfix/Dockerfile
     context: postfix
+    storage_driver: overlay
     tags:
     - ${DRONE_BUILD_NUMBER}
   when:
