@@ -1,4 +1,4 @@
-version: '2'
+version: '3.4'
 services:
   db:
     image: postgres:latest
@@ -22,9 +22,20 @@ services:
       driver: "none"
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      target: development
     volumes:
-    - ./frontend:/app:ro
+    - ./frontend/public:/app/public
+    - ./frontend/src:/app/src
+    - ./frontend/babel.config.js/app/babel.config.js
+    - ./frontend/package-lock.json:/app/package-lock.json
+    - ./frontend/package.json:/app/package.json
+    - ./frontend/vue.config.js:/app/vue.config.js
+    - ./frontend/webpack.config.js:/app/webpack.config.js
+    # TODO this breaks the dev build
+    # - ./frontend:/app
+    # - /app/node_modules/
 
   backend:
     build: ./flask

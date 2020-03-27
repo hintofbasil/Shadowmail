@@ -1,6 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import RequestDelete from "../views/RequestDelete.vue";
+import Delete from "../views/Delete.vue";
 
 Vue.use(VueRouter);
 
@@ -11,13 +13,14 @@ const routes = [
     component: Home
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
+    path: "/request_delete",
+    name: "Request delete",
+    component: RequestDelete
+  },
+  {
+    path: "/delete",
+    name: "Delete",
+    component: Delete
   }
 ];
 
