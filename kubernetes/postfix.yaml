@@ -66,6 +66,8 @@ metadata:
 type: Opaque
 data:
   DB_PASSWORD: "${DB_PASSWORD}"
+  AWS_SMTP_USERNAME: "${AWS_SMTP_USERNAME}"
+  AWS_SMTP_PASSWORD: "${AWS_SMTP_PASSWORD}"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

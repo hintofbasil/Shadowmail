@@ -106,6 +106,10 @@ steps:
       from_secret: SECRET_KEY
     DB_DOMAIN:
       from_secret: DB_DOMAIN
+    AWS_SMTP_USERNAME:
+      from_secret: AWS_SMTP_USERNAME
+    AWS_SMTP_PASSWORD:
+      from_secret: AWS_SMTP_PASSWORD
   commands:
     - npm install -g envsub
     - find kubernetes/ -name *.yaml -exec envsub --protect {} \;
