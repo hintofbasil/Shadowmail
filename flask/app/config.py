@@ -58,7 +58,7 @@ class Production(Config):
     DEVELOPMENT = False
     DEBUG = False
     TESTING = False
-    SECRET_KEY = os.environ['SECRET_KEY']
+    SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_DATABASE_URI = get_database_uri()
     MAIL_SERVER = os.environ.get('MAIL_SERVER_URI')
     MAIL_PORT = 25
