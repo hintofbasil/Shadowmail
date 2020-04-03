@@ -1,0 +1,55 @@
+name: Continous Integration
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  test_backend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: Install and test
+      env:
+        APP_SETTINGS: 'Testing'
+        FLASK_APP: ./main.py
+      run: |
+        cd flask/app
+        pip install -r requirements.txt
+        pip install pylint pytest
+        pylint --disable=missing-docstring,protected-access,fixme --ignore=main.py,config.py ./*.py
+        flask initdb
+        flask test
+
+  test_frontend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Node 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - name: Install and test
+      run: |
+        cd frontend/
+        npm install
+        npm run test
+        npm run lint
+
+  test_postfix:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: Install and test
+      run: |
+        cd postfix/
+        pip install pytest
+        pytest
