@@ -62,25 +62,34 @@ services:
     restart: on-failure
     command: flask initdb
 
-  # postfix:
-  #   build: ./postfix
-  #   environment:
-  #     DB_USERNAME: postfix
-  #     DB_PASSWORD: ${POSTFIX_DB_PASSWORD}
-  #     DB_HOSTS: db:3306
+  postfix:
+    build: ./postfix
+    environment:
+      DB_USERNAME: 'shadowmail'
+      DB_PASSWORD: 'shadowmail_pass'
+      # DB_HOSTS: db:5432
+      DB_HOSTS: 172.23.0.2:5432 # TODO this DNS lookup fails.  Using IP instead
 
-  #     # Inherited from tozd/postfix
-  #     MAILNAME: ${MAILNAME}
-  #     MY_NETWORKS: 172.18.0.0/16 127.0.0.0/8
-  #     MY_DESTINATION: $$myhostname, ${MAILNAME}, localhost.localdomain, localhost
-  #     ROOT_ALIAS: ""
-  #   ports:
-  #     - "25:25"
-  #     - "465:465"
-  #     - "587:587"
-  #   depends_on:
-  #     - db
-  #   volumes:
-  #     - /var/log/postfix:/var/log/postfix
-  #     - /var/spool/postfix:/var/spool/postfix
-  #     - ${SSL_LOCATION}:/ssl:ro
+      # AWS SES
+      AWS_SMTP_USERNAME: ${AWS_SMTP_USERNAME}
+      AWS_SMTP_PASSWORD: ${AWS_SMTP_PASSWORD}
+
+      # Inherited from tozd/postfix
+      MAILNAME: ${MAILNAME}
+      MY_NETWORKS: 172.18.0.0/16 127.0.0.0/8
+      MY_DESTINATION: $$myhostname, ${MAILNAME}, localhost.localdomain, localhost
+      ROOT_ALIAS: ""
+    ports:
+      - "25:25"
+      - 465:465
+      - 587:587
+    depends_on:
+      - db
+    volumes:
+      - ./postfix/test_certs:/ssl:ro
+      - ./postfix/etc/postfix/main.cf:/etc/postfix/main.cf
+      - ./postfix/etc/postfix/master.cf:/etc/postfix/master.cf
+      - ./postfix/etc/postfix/pgsql-aliases.cf:/etc/postfix/pgsql-aliases.cf
+      - ./postfix/etc/service:/etc/service:ro
+      - ./postfix/scripts:/scripts:ro
+      - ./postfix/entrypoint.sh:/entrypoint.sh:ro
