@@ -1,8 +1,12 @@
-name: Continous Integration
+name: Test
 
 on:
-  - push
-  - pull_request
+  push:
+    branches-ignore:
+      - 'master'
+  pull_request:
+    branches-ignore:
+      - 'master'
 
 jobs:
   test_backend:
