@@ -1,4 +1,4 @@
-[![Build Status](http://drone.shadowmail.co.uk/api/badges/hintofbasil/Shadowmail/status.svg)](http://drone.shadowmail.co.uk/hintofbasil/Shadowmail)
+![Continous Integration](https://github.com/hintofbasil/Shadowmail/workflows/Deploy/badge.svg)
 
 # Shadowmail
 
