@@ -1,4 +1,10 @@
-from customise import get_name_and_email, escape_from
+from customise import (
+    get_name_and_email,
+    escape_from,
+    delete_blocking_headers
+)
+
+from email.message import EmailMessage
 
 import pytest
 
@@ -56,3 +62,15 @@ def test_get_name_and_email(original, expected_name, expected_email):
 def test_escape_from(name, email, expected):
     new_from = escape_from(name, email)
     assert new_from == expected
+
+
+def test_delete_blocking_headers():
+    message = EmailMessage()
+    message['Sender'] = ''
+    message['Return-Path'] = ''
+    message['DKIM-Signature'] = ''
+    message = delete_blocking_headers(message)
+
+    assert not hasattr(message, 'Sender')
+    assert not hasattr(message, 'Return-Path')
+    assert not hasattr(message, 'DKIM-Signature')

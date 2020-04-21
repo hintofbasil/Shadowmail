@@ -79,6 +79,12 @@ def escape_from(name, email_address):
         safe_email=safe_email,
     )
 
+def delete_blocking_headers(email):
+    del email['Sender']
+    del email['Return-Path']
+    del email['DKIM-Signature']
+    return email
+
 def set_from_address(email):
     (name, email_addess) = get_name_and_email(email['From'])
     new_from = escape_from(name, email_addess)
@@ -98,6 +104,7 @@ def main():
         email = get_email()
         # email = add_footer(email)
         email = set_from_address(email)
+        email = delete_blocking_headers(email)
         send_email(email)
     except Exception:
         with open('/tmp/err', 'w') as f:
