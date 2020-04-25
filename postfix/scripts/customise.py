@@ -73,7 +73,7 @@ def add_html_footer(part, email_to, email_from):
             return
 
 def add_footer(email):
-    email_to = email['To']
+    (_, email_to) = get_name_and_email(email['To'])
     email_from = email['From']
     for part in email.walk():
         base64_encoded = part['Content-Transfer-Encoding'] == 'base64'
