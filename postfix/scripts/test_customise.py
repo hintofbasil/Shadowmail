@@ -95,6 +95,7 @@ def load_test_email(name):
         'multipart_7bit',
         'http_base64',
         'plaintext_base64',
+        'plaintext_to_named'
     ]
 )
 def test_add_footer(name):
