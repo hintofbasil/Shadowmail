@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import html
 import re
 import traceback
 import sys
@@ -11,14 +12,22 @@ from subprocess import Popen, PIPE
 
 SENDMAIL_COMMAND = ['/usr/sbin/sendmail', '-G', '-i', '-f']
 
-FOOTER = """
+PLAINTEXT_FOOTER = """
 
 ----------
 
 This email was originally sent from {from_email}
 
-To delete this address visit:\nhttps://shadowmail.co.uk/request_delete?email={to_email}
+To delete this address visit: https://shadowmail.co.uk/request_delete?email={to_email}
 """
+
+HTML_FOOTER = """<hr></hr>
+<span>This email was originally sent from {from_email}</span>
+<br></br><br></br>
+<span>To delete this address visit: https://shadowmail.co.uk/request_delete?email={to_email}</span>
+{closing_tag}"""
+
+HTML_CLOSING_TAGS = ['</body>', '</BODY>', '</html', '</HTML>']
 
 EMAIL_ONLY_REGEX = re.compile(r'(.+@.+)')
 NAME_AND_EMAIL_REGEX = re.compile(r'(["\']?)(.+)\1\s<(.+@.+)>')
@@ -39,13 +48,37 @@ def send_email(email):
     subprocess.communicate(in_mem_file.getvalue().encode('utf-8'))
     return subprocess.wait()
 
-def add_footer(email):
-    content = email.get_payload()
-    content += FOOTER.format(
-        from_email=email['FROM'],
-        to_email=email['To'],
+def add_plaintext_footer(part, email_to, email_from):
+    content = part.get_payload()
+    content += PLAINTEXT_FOOTER.format(
+        to_email=email_to,
+        from_email=email_from,
     )
-    email.set_payload(content)
+    part.set_payload(content)
+
+def add_html_footer(part, email_to, email_from):
+    content = part.get_payload()
+    for tag in HTML_CLOSING_TAGS:
+        if tag in content:
+            content = content.replace(
+                tag,
+                HTML_FOOTER.format(
+                    to_email=html.escape(email_to),
+                    from_email=html.escape(email_from),
+                    closing_tag=tag,
+                )
+            )
+            part.set_payload(content)
+            return
+
+def add_footer(email):
+    email_to = email['To']
+    email_from = email['From']
+    for part in email.walk():
+        if part.get_content_type() == 'text/plain':
+            add_plaintext_footer(part, email_to, email_from)
+        elif part.get_content_type() == 'text/html':
+            add_html_footer(part, email_to, email_from)
     return email
 
 def get_name_and_email(original_from):
@@ -96,19 +129,16 @@ def set_from_address(email):
         f.write('\n')
     del email['From']
     email['From'] = new_from
-    # email['From'] = 'noreply@shadowmail.co.uk'
     return email
 
 def main():
     try:
         email = get_email()
-        # email = add_footer(email)
+        email = add_footer(email)
         email = set_from_address(email)
         email = delete_blocking_headers(email)
         send_email(email)
     except Exception:
-        with open('/tmp/err', 'w') as f:
-            f.write(traceback.format_exc())
         sys.exit(75) # tempfail, we hope.
 
 if __name__ == '__main__':

@@ -1,0 +1,21 @@
+To: to@example.com
+From: Test <from@example.com>
+Subject: Test
+Date: Thu, 23 Apr 2020 20:19:45 +0100
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+
+<html>
+  <head>
+    <title>Test</title>
+  </head>
+  <body>
+    <h1>Test body</h1>
+  <hr></hr>
+<span>This email was originally sent from Test &lt;from@example.com&gt;</span>
+<br></br><br></br>
+<span>To delete this address visit: https://shadowmail.co.uk/request_delete?email=to@example.com</span>
+</body>
+</html>
