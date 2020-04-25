@@ -93,6 +93,8 @@ def load_test_email(name):
         'http_7bit_no_body',
         'plaintext_7bit',
         'multipart_7bit',
+        'http_base64',
+        'plaintext_base64',
     ]
 )
 def test_add_footer(name):
