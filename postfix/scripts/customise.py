@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import base64
 import html
 import re
 import traceback
@@ -75,10 +76,26 @@ def add_footer(email):
     email_to = email['To']
     email_from = email['From']
     for part in email.walk():
+        base64_encoded = part['Content-Transfer-Encoding'] == 'base64'
+        encoding = part.get_charsets()[0]
+        if base64_encoded:
+            part.set_payload(base64.b64decode(part.get_payload()))
         if part.get_content_type() == 'text/plain':
             add_plaintext_footer(part, email_to, email_from)
         elif part.get_content_type() == 'text/html':
             add_html_footer(part, email_to, email_from)
+        if base64_encoded:
+            encoded_payload = base64.b64encode(part.get_payload().encode(encoding))
+            encoded_payload_with_newlines = '\n'.join(
+                [
+                    encoded_payload[i:i+76].decode(encoding)
+                    for i in range(0, len(encoded_payload), 76)
+                ]
+            )
+            # We need this for the tests to pass as files in Unix systems should always
+            # end with a new line
+            encoded_payload_with_newlines = encoded_payload_with_newlines + '\n'
+            part.set_payload(encoded_payload_with_newlines)
     return email
 
 def get_name_and_email(original_from):

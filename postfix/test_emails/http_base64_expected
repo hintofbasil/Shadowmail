@@ -1,0 +1,15 @@
+To: to@example.com
+From: Test <from@example.com>
+Subject: Test
+Date: Thu, 23 Apr 2020 20:19:45 +0100
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: base64
+Content-Language: en-GB
+
+PGh0bWw+CiAgPGhlYWQ+CiAgICA8dGl0bGU+VGVzdDwvdGl0bGU+CiAgPC9oZWFkPgogIDxib2R5
+PgogICAgPGgxPlRlc3QgYm9keTwvaDE+CiAgPGhyPjwvaHI+CjxzcGFuPlRoaXMgZW1haWwgd2Fz
+IG9yaWdpbmFsbHkgc2VudCBmcm9tIFRlc3QgJmx0O2Zyb21AZXhhbXBsZS5jb20mZ3Q7PC9zcGFu
+Pgo8YnI+PC9icj48YnI+PC9icj4KPHNwYW4+VG8gZGVsZXRlIHRoaXMgYWRkcmVzcyB2aXNpdDog
+aHR0cHM6Ly9zaGFkb3dtYWlsLmNvLnVrL3JlcXVlc3RfZGVsZXRlP2VtYWlsPXRvQGV4YW1wbGUu
+Y29tPC9zcGFuPgo8L2JvZHk+CjwvaHRtbD4K

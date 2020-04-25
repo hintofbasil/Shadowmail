@@ -1,0 +1,11 @@
+To: to@example.com
+From: Test <from@example.com>
+Subject: Test
+Date: Thu, 23 Apr 2020 20:19:45 +0100
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: base64
+Content-Language: en-GB
+
+PGh0bWw+CiAgPGhlYWQ+CiAgICA8dGl0bGU+VGVzdDwvdGl0bGU+CiAgPC9oZWFkPgogIDxib2R5
+PgogICAgPGgxPlRlc3QgYm9keTwvaDE+CiAgPC9ib2R5Pgo8L2h0bWw+Cg==
