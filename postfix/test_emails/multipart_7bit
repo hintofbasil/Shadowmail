@@ -1,0 +1,27 @@
+Date: Mon, 20 Apr 2020 13:54:52 +0100 (BST)
+To: to@example.com
+Subject: Test
+From: Test <from@example.com>
+Content-Type: multipart/related; boundary="--==_mimepart_58d15b77e8fdd_43fc8121b89f07094cf"; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+----==_mimepart_58d15b77e8fdd_43fc8121b89f07094cf
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+    <title>Test</title>
+  </head>
+  <body>
+    <h1>Test body</h1>
+  </body>
+</html>
+
+
+
+----==_mimepart_58d15b77e8fdd_43fc8121b89f07094cf
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Test

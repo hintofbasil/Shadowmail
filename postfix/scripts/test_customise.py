@@ -1,10 +1,12 @@
 from customise import (
     get_name_and_email,
     escape_from,
-    delete_blocking_headers
+    delete_blocking_headers,
+    add_footer,
 )
 
 from email.message import EmailMessage
+from email.parser import Parser
 
 import pytest
 
@@ -74,3 +76,29 @@ def test_delete_blocking_headers():
     assert not hasattr(message, 'Sender')
     assert not hasattr(message, 'Return-Path')
     assert not hasattr(message, 'DKIM-Signature')
+
+def load_test_email(name):
+    with open(f'test_emails/{name}', 'r') as email_file:
+        with open(f'test_emails/{name}_expected', 'r') as expected_file:
+            parser = Parser()
+            return (
+                parser.parse(email_file),
+                expected_file.read(),
+            )
+
+@pytest.mark.parametrize(
+    'name',
+    [
+        'http_7bit',
+        'http_7bit_no_body',
+        'plaintext_7bit',
+        'multipart_7bit',
+    ]
+)
+def test_add_footer(name):
+    (email, expected) = load_test_email(name)
+    email = add_footer(email)
+
+    actual = email.as_string()
+
+    assert actual == expected

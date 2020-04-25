@@ -1,0 +1,15 @@
+To: to@example.com
+From: Test <from@example.com>
+Subject: Test
+Date: Thu, 23 Apr 2020 20:19:45 +0100
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+
+<html>
+  <head>
+    <title>Test</title>
+  </head>
+  <h1>Test body</h1>
+</html>

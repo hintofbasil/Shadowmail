@@ -16,8 +16,6 @@ mkdir /var/spool/filter
 chown filter:filter /var/spool/filter
 chmod 750 /var/spool/filter
 
-chown -R postfix:postdrop /var/spool/postfix/public /var/spool/postfix/maildrop
-
 service syslog-ng start
 
 # Set nameserver in chroot to allow DNS lookups
