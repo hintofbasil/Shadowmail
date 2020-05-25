@@ -22,7 +22,7 @@ prometheus-client==0.7.1
 prometheus-flask-exporter==0.9.1
 psycopg2==2.8.3
 py==1.4.33
-pylint==2.2.2
+pylint==2.5.0
 pyparsing==2.1.10
 pytest==3.0.7
 six==1.10.0
