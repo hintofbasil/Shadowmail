@@ -147,10 +147,6 @@ typings/
 # dotenv environment variable files
 .env*
 
-# gatsby files
-.cache/
-public
-
 # Mac files
 .DS_Store
 
@@ -161,8 +157,25 @@ yarn-error.log
 # Yarn Integrity file
 .yarn-integrity
 
-shadowmail-postfix-docker/env.list
-flask/app/node_modules/
-flask/app/static/
-package-lock.json
-flask/static/node_modules
+secrets
+.DS_Store
+node_modules
+/dist
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
