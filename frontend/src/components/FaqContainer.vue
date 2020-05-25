@@ -45,9 +45,8 @@ const CONTENT = [
   },
   {
     summary: "Are there any limits in place?",
-    content: `Yes, currently you may only create 3 emails addresses per hour.
-    This is limited by both receiving address and IP address.
-    We will explore removing or increasing these limits in the future.`
+    content: `Yes, currently you may only create 3 emails addresses every 30 minutes.
+    This is limited by both receiving address and IP address.`
   }
 ];
 
