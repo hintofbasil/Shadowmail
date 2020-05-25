@@ -1,4 +1,4 @@
-version: '2'
+version: '3.4'
 services:
   db:
     image: postgres:latest
@@ -22,18 +22,20 @@ services:
       driver: "none"
 
   frontend:
-    build: ./frontend
-    environment:
-      COMMAND: 'develop'
+    build:
+      context: ./frontend
+      target: development
     volumes:
+    - ./frontend/public:/app/public
     - ./frontend/src:/app/src
-    - ./frontend/gatsby-browser.js:/app/gatsby-browser.js
-    - ./frontend/gatsby-config.js:/app/gatsby-config.js
-    - ./frontend/package.json:/app/package.json
+    - ./frontend/babel.config.js/app/babel.config.js
     - ./frontend/package-lock.json:/app/package-lock.json
-    - ./frontend/loadershim.js:/app/loadershim.js
-    - ./frontend/jest.config.js:/app/jest.config.js
-    - ./frontend/jest-preprocess.js:/app/jest-preprocess.js
+    - ./frontend/package.json:/app/package.json
+    - ./frontend/vue.config.js:/app/vue.config.js
+    - ./frontend/webpack.config.js:/app/webpack.config.js
+    # TODO this breaks the dev build
+    # - ./frontend:/app
+    # - /app/node_modules/
 
   backend:
     build: ./flask
