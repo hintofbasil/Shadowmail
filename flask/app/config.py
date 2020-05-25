@@ -37,7 +37,7 @@ class Config:
 
     IP_RATE_LIMIT = '10/30minutes'
     CREATE_EMAIL_RATE_LIMIT = '3/30minutes'
-    REQUEST_DELETE_RATE_LIMIT = '1/30minutes'
+    REQUEST_DELETE_RATE_LIMIT = '3/30minutes'
 
 class Testing(Config):
     CSRF_ENABLED = False

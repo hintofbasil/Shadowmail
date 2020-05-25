@@ -336,15 +336,18 @@ def test_request_delete_limit_email(_set_up_client, _reset_limits, _clear_db):
     data = json.loads(response.data)
     email = data['email']
     assert response.status_code == status.HTTP_201_CREATED
-    # Legitimate request
-    data = dict(
-        email=email,
-    )
-    data = json.dumps(data)
-    response = client.post('/api/request_delete', data=data,
-                           content_type='application/json')
-    assert response.status_code == status.HTTP_200_OK
-    #Double request
+    
+    # Valid requests
+    for _ in range(limit):
+        data = dict(
+            email=email,
+        )
+        data = json.dumps(data)
+        response = client.post('/api/request_delete', data=data,
+                            content_type='application/json')
+        assert response.status_code == status.HTTP_200_OK
+
+    # Invalid request
     data = dict(
         email=email,
     )
