@@ -12,7 +12,7 @@ gunicorn==19.9.0
 isort==4.3.4
 itsdangerous==1.1.0
 Jinja2==2.10.1
-lazy-object-proxy==1.3.1
+lazy-object-proxy==1.5.0
 lazysorted==0.1.1
 limits==1.2.1
 MarkupSafe==0.23
