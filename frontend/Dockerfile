@@ -1,17 +1,16 @@
-FROM node AS development
+FROM node:lts-stretch-slim AS development
 WORKDIR /app
 
 COPY package.json package-lock.json /app/
-RUN npm install --only=dev
-# TODO check comment in docker-compose.yaml volumes
-# VOLUME /app/node_modules
+RUN npm ci
+VOLUME /app/node_modules
 
 COPY . /app
 CMD npm run serve
 
 
 
-FROM node AS builder
+FROM node:lts-stretch-slim AS builder
 WORKDIR /app
 COPY --from=development /app /app
 
@@ -24,7 +23,6 @@ RUN apt-get update \
         --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
-RUN npm install
 RUN npm run build
 
 

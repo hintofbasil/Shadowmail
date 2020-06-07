@@ -1,19 +1,19 @@
 version: '3.4'
 services:
   db:
-    image: postgres:latest
+    image: postgres:12.3
     environment:
       POSTGRES_DATABASE: 'shadowmail'
       POSTGRES_USER: 'shadowmail'
       POSTGRES_PASSWORD: 'shadowmail_pass'
     volumes:
-    - ./build/database:/var/lib/postgresql/data
+    - /var/lib/postgresql/data
 
   proxy:
     image: nginx:latest
     depends_on:
-      - frontend
-      - backend
+    - frontend
+    - backend
     ports:
     - 8000:80
     volumes:
@@ -26,19 +26,13 @@ services:
       context: ./frontend
       target: development
     volumes:
-    - ./frontend/public:/app/public
-    - ./frontend/src:/app/src
-    - ./frontend/babel.config.js/app/babel.config.js
-    - ./frontend/package-lock.json:/app/package-lock.json
-    - ./frontend/package.json:/app/package.json
-    - ./frontend/vue.config.js:/app/vue.config.js
-    - ./frontend/webpack.config.js:/app/webpack.config.js
-    # TODO this breaks the dev build
-    # - ./frontend:/app
-    # - /app/node_modules/
+    - ./frontend:/app
+    - /app/node_modules/
 
   backend:
     build: ./flask
+    depends_on:
+    - db
     environment:
       APP_SETTINGS: 'Development'
       DB_USERNAME: 'shadowmail'
@@ -47,6 +41,7 @@ services:
       DB_DOMAIN: 'db'
       DB_PROTOCOL: 'postgres'
       RELOAD: '--reload'
+      FLASK_APP: '/app/main.py'
     volumes:
     - ./flask/app:/app:ro
 
