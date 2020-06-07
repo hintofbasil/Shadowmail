@@ -2,39 +2,36 @@
 
 # Shadowmail
 
-## Usage
+A web website to create private email aliases.  These forward all emails on to your personal account but can be easily deleted should the address be leaked or sold.
 
-Generate random passwords for flask and postfix
+This project is composed of three submodules.  The `flask` directory contains the backend, the `frontend` directory contains the frontend and the `postfix` directory contains the email client.
 
-    export FLASK_DB_PASSWORD=$(pwgen -Bs1 24)
-    export POSTFIX_DB_PASSWORD=$(pwgen -Bs1 24)
-    export BACKUP_DB_PASSWORD=$(pwgen -Bs1 24)
+## Development
 
-Generate Flask secret key
+To bring up the development stack run the following.  The environment variables are optional but emails won't actually be sent without these.
 
-    export FLASK_SECRET_KEY=$(pwgen -Bs1 48)
+```bash
+export AWS_SMTP_USERNAME= # Your AWS SES username
+export AWS_SMTP_PASSWORD= # Your AWS SES password
+export MAILNAME="shadowmail.co.uk" # Your domain name to send/receive emails
 
-Set Postfix domain name
+docker-compose up
+```
 
-    export MAILNAME=shadowmail.co.uk
+You can then access the site at http://localhost:8000
 
-Set SSL certificate location
+### Sending test emails
 
-    export SSL_LOCATION=/path/to/certificates
+To send a test email to the development stack run
 
-Set Amazon S3 credentials
+```bash
+./send_test_email.py to@domain.co.uk (plain|html)
+```
 
-    export AWS_ACCESS_KEY_ID="AWS_ACCESS_KEY_ID"
-    export AWS_SECRET_ACCESS_KEY="AWS_SECRET_ACCESS_KEY"
-    export AWS_REGION="AWS_REGION"
-    export AWS_BUCKET_NAME="AWS_BUCKET_NAME"
+### Running tests
 
-Set OPENSSL Encryption public key folder.
+Instructions for testing can be found in the readme of each application
 
-    export OPENSSL_PUBLIC_KEY_LOCATION=/path/to/key
+## Production
 
-This folder must contain a file called public.pem
-
-Launch docker containers
-
-    docker-compose up -d
+Instructions for deploying can be found in the readme of each application

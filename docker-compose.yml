@@ -43,7 +43,7 @@ services:
       RELOAD: '--reload'
       FLASK_APP: '/app/main.py'
     volumes:
-    - ./flask/app:/app:ro
+    - ./flask:/app
 
   migrate:
     build: ./flask

@@ -19,12 +19,11 @@ jobs:
         APP_SETTINGS: 'Testing'
         FLASK_APP: ./main.py
       run: |
-        cd flask/app
-        pip install -r requirements.txt
+        cd flask/
+        make install
         pip install pylint pytest
-        pylint --disable=missing-docstring,protected-access,fixme --ignore=main.py,config.py ./*.py
         flask initdb
-        flask test
+        make test
 
   test_frontend:
     runs-on: ubuntu-latest
@@ -37,9 +36,8 @@ jobs:
     - name: Install and test
       run: |
         cd frontend/
-        npm install
-        npm run lint
-        # npm run test
+        make install
+        make test
 
   test_postfix:
     runs-on: ubuntu-latest
@@ -52,8 +50,8 @@ jobs:
     - name: Install and test
       run: |
         cd postfix/
-        pip install pytest
-        pytest
+        make install
+        make test
 
   publish_image_backend:
     runs-on: ubuntu-latest

@@ -12,10 +12,10 @@ ENV RELOAD ""
 ENV APP_HOME /app
 WORKDIR $APP_HOME
 
-COPY app/requirements.txt /app/requirements.txt
+COPY ./requirements.txt $APP_HOME/requirements.txt
 RUN pip install -r $APP_HOME/requirements.txt
 RUN pip install gunicorn
 
-COPY app $APP_HOME
+COPY . $APP_HOME
 
 CMD exec gunicorn --bind :$PORT --workers 1 main:app $RELOAD
