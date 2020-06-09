@@ -15,7 +15,7 @@ Jinja2==2.10.1
 lazy-object-proxy==1.5.0
 lazysorted==0.1.1
 limits==1.2.1
-MarkupSafe==0.23
+MarkupSafe==1.1.1
 mccabe==0.6.1
 packaging==20.4
 prometheus-client==0.7.1
