@@ -21,7 +21,7 @@ packaging==20.4
 prometheus-client==0.7.1
 prometheus-flask-exporter==0.13.0
 psycopg2==2.8.3
-py==1.4.33
+py==1.8.1
 pylint==2.5.0
 pyparsing==2.1.10
 pytest==3.0.7
