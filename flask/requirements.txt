@@ -11,7 +11,7 @@ Flask-SQLAlchemy==2.4.3
 gunicorn==20.0.4
 isort==4.3.4
 itsdangerous==1.1.0
-Jinja2==2.10.1
+Jinja2==2.11.2
 lazy-object-proxy==1.5.0
 lazysorted==0.1.1
 limits==1.5.1
