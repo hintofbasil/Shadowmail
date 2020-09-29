@@ -1,4 +1,4 @@
-appdirs==1.4.0
+appdirs==1.4.4
 astroid==2.4.2
 beautifurl==0.0.2
 blinker==1.4
