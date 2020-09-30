@@ -22,7 +22,6 @@ jobs:
         cd flask/
         make install
         pip install pylint pytest
-        flask initdb
         make test
 
   test_frontend:

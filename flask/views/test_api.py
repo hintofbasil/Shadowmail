@@ -18,12 +18,14 @@ def _set_up_client(request):
     app_context.push()
     def tear_down_client():
         db.drop_all()
-        db.configure_mappers()
-        db.create_all()
         db.session.commit()
 
         app_context.pop()
     request.addfinalizer(tear_down_client)
+
+    db.configure_mappers()
+    db.create_all()
+    db.session.commit()
 
 @pytest.fixture()
 def _clear_db():
