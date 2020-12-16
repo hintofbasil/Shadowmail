@@ -30,16 +30,6 @@ smtpd_tls_session_cache_timeout = 3600s
 smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 
-# SES settings
-
-relayhost = [email-smtp.eu-west-1.amazonaws.com]:587
-smtp_sasl_auth_enable = yes
-smtp_sasl_security_options = noanonymous
-smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
-smtp_use_tls = yes
-smtp_tls_security_level = encrypt
-smtp_tls_note_starttls_offer = yes
-
 # Virtual users
 virtual_alias_maps = pgsql:/etc/postfix/pgsql-aliases.cf
 message_size_limit = 104857600
