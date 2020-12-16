@@ -9,8 +9,9 @@ VOLUME /ssl
 ENV  DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
-RUN apt-get install --yes postfix postfix-pgsql syslog-ng
+RUN apt-get install --yes postfix postfix-pgsql syslog-ng make python3-dev
 RUN echo "mail.shadowmail.co.uk" > /etc/mailname
+COPY ./Makefile /Makefile
 COPY ./etc /etc
 COPY ./scripts /scripts
 

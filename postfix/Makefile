@@ -5,3 +5,5 @@ install:
 
 unit:
 	pytest
+
+ci: install test

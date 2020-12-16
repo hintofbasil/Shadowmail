@@ -8,3 +8,6 @@ unit:
 
 lint:
 	npm run lint
+
+
+ci: install test

@@ -1,6 +1,7 @@
 FROM node:lts-stretch-slim AS development
 WORKDIR /app
 
+COPY ./Makefile $WORKDIR/Makefile
 COPY package.json package-lock.json /app/
 RUN npm ci
 VOLUME /app/node_modules

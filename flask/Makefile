@@ -8,3 +8,5 @@ unit:
 
 lint:
 	pylint --disable=missing-docstring,protected-access,fixme --ignore=main.py,config.py ./*.py
+
+ci: install test

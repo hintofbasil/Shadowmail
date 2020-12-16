@@ -13,44 +13,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.7
-    - name: Install and test
-      env:
-        APP_SETTINGS: 'Testing'
-        FLASK_APP: ./main.py
-      run: |
-        cd flask/
-        make install
-        pip install pylint pytest
-        make test
+    - name: Build image
+      run: docker build ./flask --file ./flask/Dockerfile -t flask
+    - name: Run tests
+      run: docker run -e APP_SETTINGS=Testing --entrypoint bash flask make ci
 
   test_frontend:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Node 12.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12.x
-    - name: Install and test
-      run: |
-        cd frontend/
-        make install
-        make test
+    - name: Build image
+      run: docker build ./frontend --file ./frontend/Dockerfile -t frontend --target development
+    - name: Run tests
+      run: docker run --entrypoint bash frontend make ci
 
   test_postfix:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.7
-    - name: Install and test
-      run: |
-        cd postfix/
-        make install
-        make test
+    - name: Build image
+      run: docker build ./postfix --file ./postfix/Dockerfile -t postfix
+    - name: Run tests
+      run: docker run --entrypoint bash postfix make ci

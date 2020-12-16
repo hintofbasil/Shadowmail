@@ -12,6 +12,7 @@ ENV RELOAD ""
 ENV APP_HOME /app
 WORKDIR $APP_HOME
 
+COPY ./Makefile $WORKDIR/Makefile
 COPY ./requirements.txt $APP_HOME/requirements.txt
 RUN pip install -r $APP_HOME/requirements.txt
 RUN pip install gunicorn
